@@ -1,18 +1,39 @@
 package main
 
 import (
-	"net/http"
+	"bytes"
 	"html/template"
+	"net/http"
+	"os"
+
+	"github.com/yuin/goldmark"
 )
+
 
 type Page struct {
 	Title string
 	Content template.HTML
 }
 
-func InitAssets() {
-	// Routes static assets like stylesheets and scripts
 
+// Converts a markdown located at "Path" to valid html
+func FileToHtml(Path string) template.HTML {
+	file, err := os.ReadFile(Path)
+	if err != nil {
+		panic(err)
+	}
+
+	var buf bytes.Buffer
+	if err := goldmark.Convert(file, &buf); err != nil {panic(err)}
+
+	html := template.HTML(buf.String())
+
+	return html
+}
+
+
+// Routes static assets like stylesheets and scripts
+func InitAssets() {
 	styles := http.FileServer(http.Dir("web/styles/"))
 	// scripts := http.FileServer(http.Dir("web/scripts/"))
 	assets := http.FileServer(http.Dir("web/assets/"))
@@ -22,9 +43,9 @@ func InitAssets() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", assets))
 }
 
-func InitIndex() {
-	// Routes the main page and sets it up.
 
+// Routes the main page and sets it up.
+func InitIndex() {
 	page := Page{"Início", " "}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -32,12 +53,12 @@ func InitIndex() {
 	});
 }
 
-// func InitPosts()
 
-// func InitArt()
-
+// Routes the "about" page and sets it up.
 func InitAbout() {
 	page := Page{"Sobre", " "}
+
+	page.Content = FileToHtml("content/about.md")
 
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, page)
@@ -52,3 +73,4 @@ func main() {
 
 	http.ListenAndServe(":8080", nil)
 }
+
