@@ -1,0 +1,49 @@
+:root {
+    color-scheme: dark;
+
+    --accent-blue: #0073ff;
+    --accent-magenta: #ab00ff;
+
+    --background: #111922;
+}
+
+body {
+    background-color: var(--background);
+    color: white;
+
+    font-family: monospace;
+    font-size: 15px;
+
+    margin: 0px;
+    padding: 0px;
+
+    margin-left: 16vw;
+    margin-right: 16vw;
+
+    margin-top: 5vh;
+}
+
+hr {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-magenta));
+    height: 1px;
+    border: 0;
+}
+
+a {
+    transition: .3s;
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+a:hover {
+    transition: .3s;
+    color: var(--accent-magenta);
+}
+
+p {
+    text-align: justify;
+}
+
+footer {
+    text-align: center;
+}
