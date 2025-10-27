@@ -1,15 +1,30 @@
-:root {
-    color-scheme: dark;
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
 
-    --accent-blue: #0073ff;
-    --accent-magenta: #ab00ff;
+        --accent-blue: #0073ff;
+        --accent-magenta: #ab00ff;
 
-    --background: #111922;
+        --background: #111922;
+        --color: white;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+
+        --accent-blue: #0073ff;
+        --accent-magenta: #ab00ff;
+
+        --background: white;
+        --color: black;
+    }
 }
 
 body {
     background-color: var(--background);
-    color: white;
+    color: var(--color);
 
     font-family: monospace;
     font-size: 15px;
