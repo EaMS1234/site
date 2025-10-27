@@ -17,11 +17,9 @@ type Page struct {
 
 
 // Converts a markdown located at "Path" to valid html
-func FileToHtml(Path string) template.HTML {
+func GetHtml(Path string) template.HTML {
 	file, err := os.ReadFile(Path)
-	if err != nil {
-		panic(err)
-	}
+	if err != nil {panic(err)}
 
 	var buf bytes.Buffer
 	if err := goldmark.Convert(file, &buf); err != nil {panic(err)}
@@ -58,7 +56,7 @@ func InitIndex() {
 func InitAbout() {
 	page := Page{"Sobre", " "}
 
-	page.Content = FileToHtml("content/about.md")
+	page.Content = GetHtml("content/about.md")
 
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, page)
