@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -30,6 +31,20 @@ func GetHtml(Path string) template.HTML {
 }
 
 
+func GetPosts(Path string) []Page {
+	data, err := os.ReadDir(Path)
+	if err != nil {panic(err)}
+
+	var list []Page
+
+	for _, file := range data {
+		list = append(list, Page{file.Name()[:len(file.Name())-3], ""})
+	}
+
+	return list
+}
+
+
 // Routes static assets like stylesheets and scripts
 func InitAssets() {
 	styles := http.FileServer(http.Dir("web/styles/"))
@@ -47,6 +62,14 @@ func InitIndex() {
 	page := Page{"Início", " "}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		list := GetPosts("content/posts/")
+
+		page.Content = template.HTML("")
+
+		for _, post := range list {
+			page.Content += template.HTML(fmt.Sprintf("<a href=\"/artigo?a=%v\"><h1>%v</h1></a>", post.Title, post.Title))
+		}
+
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, page)
 	});
 }
@@ -64,10 +87,23 @@ func InitAbout() {
 
 }
 
+
+func InitPosts() {
+	http.HandleFunc("/artigo", func(w http.ResponseWriter, r *http.Request) {
+		target := r.URL.Query().Get("a")
+
+		content := GetHtml(fmt.Sprintf("content/posts/%v.md", target))
+
+		template.Must(template.ParseFiles("web/index.html")).Execute(w, Page{target, content})
+	});
+}
+
+
 func main() {
 	InitAssets()
 	InitIndex()
 	InitAbout()
+	InitPosts()
 
 	http.ListenAndServe(":8080", nil)
 }

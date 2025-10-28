@@ -39,6 +39,13 @@ body {
     margin-bottom: 5vh;    
 }
 
+@media (max-width: 720px) {
+  body {
+    margin-left: 4vw;
+    margin-right: 4vw;
+  }
+}
+
 hr {
     background: linear-gradient(90deg, var(--accent-blue), var(--accent-magenta));
     height: 1px;
