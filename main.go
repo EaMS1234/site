@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"syscall"
+	"time"
 
 	"github.com/yuin/goldmark"
 )
@@ -14,6 +16,7 @@ import (
 type Page struct {
 	Title string
 	Content template.HTML
+	Time time.Time
 }
 
 
@@ -38,7 +41,15 @@ func GetPosts(Path string) []Page {
 	var list []Page
 
 	for _, file := range data {
-		list = append(list, Page{file.Name()[:len(file.Name())-3], ""})
+		if !file.IsDir() {
+
+			// Gets the timestamp for the file
+			in, err := file.Info()
+			if err != nil {panic(err)}
+			tm := time.Unix(in.Sys().(*syscall.Stat_t).Ctim.Sec, 0)
+
+			list = append(list, Page{file.Name()[:len(file.Name())-3], "", tm})
+		}
 	}
 
 	return list
@@ -59,7 +70,7 @@ func InitAssets() {
 
 // Routes the main page and sets it up.
 func InitIndex() {
-	page := Page{"Início", " "}
+	page := Page{"Início", " ", time.Now()}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		list := GetPosts("content/posts/")
@@ -67,7 +78,12 @@ func InitIndex() {
 		page.Content = template.HTML("")
 
 		for _, post := range list {
-			page.Content += template.HTML(fmt.Sprintf("<a href=\"/artigo?a=%v\"><h1>%v</h1></a>", post.Title, post.Title))
+			page.Content += template.HTML(fmt.Sprintf(
+				"<a href=\"/artigo?a=%v\"><h1>%v</h1></a>%v",
+				post.Title,
+				post.Title,
+				post.Time.Format("02/01/2006"),
+			));
 		}
 
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, page)
@@ -77,7 +93,7 @@ func InitIndex() {
 
 // Routes the "about" page and sets it up.
 func InitAbout() {
-	page := Page{"Sobre", " "}
+	page := Page{"Sobre", " ", time.Now()}
 
 	page.Content = GetHtml("content/about.md")
 
@@ -94,7 +110,7 @@ func InitPosts() {
 
 		content := GetHtml(fmt.Sprintf("content/posts/%v.md", target))
 
-		template.Must(template.ParseFiles("web/index.html")).Execute(w, Page{target, content})
+		template.Must(template.ParseFiles("web/index.html")).Execute(w, Page{target, content, time.Now()})
 	});
 }
 
