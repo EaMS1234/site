@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭaMS | Início</title>
+    <title>ЭaMS | {{.Title}}</title>
     <link rel="stylesheet" href="/styles/style.css" id="style">
     <link rel="icon" href="/assets/favicon.ico">
 </head>
@@ -22,13 +22,11 @@
     <main>
         <hr />
 
-        <h1>Início</h1>
+        <h2>{{.Title}}</h2>
 
-        {{range .Posts}}
-        <a href="/artigo?a={{.Title}}"><h2>{{.Title}}</h2></a>
-        <p>{{.Time}}</p>
-        <p class="desc"><i>{{.Desc}}</i><p>
-        {{end}}
+        <p><i>{{.Time}}</i></p>
+
+        {{.Content}}
 
         <hr />
     </main>

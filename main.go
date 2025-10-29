@@ -2,11 +2,10 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"net/http"
 	"os"
-	"syscall"
+	"sort"
 	"time"
 
 	"github.com/yuin/goldmark"
@@ -15,8 +14,23 @@ import (
 
 type Page struct {
 	Title string
+	Desc string
+	Time string
 	Content template.HTML
-	Time time.Time
+}
+
+
+type Index struct {
+	Posts []Page
+}
+
+
+// Simple function for getting the timestamp of a file
+func GetTime(File string) time.Time {
+	file, err := os.Stat(File)
+	if err != nil {panic(err)}
+
+	return file.ModTime()
 }
 
 
@@ -34,6 +48,7 @@ func GetHtml(Path string) template.HTML {
 }
 
 
+// Returns a list of the files on "Path"
 func GetPosts(Path string) []Page {
 	data, err := os.ReadDir(Path)
 	if err != nil {panic(err)}
@@ -44,13 +59,26 @@ func GetPosts(Path string) []Page {
 		if !file.IsDir() {
 
 			// Gets the timestamp for the file
-			in, err := file.Info()
-			if err != nil {panic(err)}
-			tm := time.Unix(in.Sys().(*syscall.Stat_t).Ctim.Sec, 0)
+			tm := GetTime(Path + "/" + file.Name())
 
-			list = append(list, Page{file.Name()[:len(file.Name())-3], "", tm})
+			// Gets the first 128 characters as a description
+			f, err := os.Open((Path + "/" + file.Name()))
+			if err != nil {panic(err)}
+
+			buf := make([]byte, 128)
+
+			head, err := f.Read(buf)
+			if err != nil {panic(err)}
+
+
+			list = append(list, Page{file.Name()[:len(file.Name())-3], (string(buf[:head]) + "..."), tm.Format("1/2/2006 - 15:04"), ""})
 		}
 	}
+
+	// Sorts the list by time
+	sort.Slice(list, func(a, b int) bool {
+		return list[a].Time > list[b].Time
+	})
 
 	return list
 }
@@ -70,47 +98,40 @@ func InitAssets() {
 
 // Routes the main page and sets it up.
 func InitIndex() {
-	page := Page{"Início", " ", time.Now()}
+	var index Index
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		list := GetPosts("content/posts/")
+		index.Posts = GetPosts("content/posts/")
 
-		page.Content = template.HTML("")
-
-		for _, post := range list {
-			page.Content += template.HTML(fmt.Sprintf(
-				"<a href=\"/artigo?a=%v\"><h1>%v</h1></a>%v",
-				post.Title,
-				post.Title,
-				post.Time.Format("02/01/2006"),
-			));
-		}
-
-		template.Must(template.ParseFiles("web/index.html")).Execute(w, page)
-	});
+		template.Must(template.ParseFiles("web/index.html")).Execute(w, index)
+	})
 }
 
 
 // Routes the "about" page and sets it up.
 func InitAbout() {
-	page := Page{"Sobre", " ", time.Now()}
+	page := Page{"Sobre", "", "", ""}
 
 	page.Content = GetHtml("content/about.md")
 
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/index.html")).Execute(w, page)
+		template.Must(template.ParseFiles("web/post.html")).Execute(w, page)
 	});
 
 }
 
 
+// Handles posts
 func InitPosts() {
 	http.HandleFunc("/artigo", func(w http.ResponseWriter, r *http.Request) {
 		target := r.URL.Query().Get("a")
 
-		content := GetHtml(fmt.Sprintf("content/posts/%v.md", target))
+		file := "content/posts/" + target + ".md"
 
-		template.Must(template.ParseFiles("web/index.html")).Execute(w, Page{target, content, time.Now()})
+		content := GetHtml(file)
+		tm := GetTime(file).Format("02-01-2006 - 15:04")
+
+		template.Must(template.ParseFiles("web/post.html")).Execute(w, Page{target, "", tm, content})
 	});
 }
 
