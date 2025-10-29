@@ -71,7 +71,7 @@ func GetPosts(Path string) []Page {
 			if err != nil {panic(err)}
 
 
-			list = append(list, Page{file.Name()[:len(file.Name())-3], (string(buf[:head]) + "..."), tm.Format("1/2/2006 - 15:04"), ""})
+			list = append(list, Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("1/2/2006 - 15:04"), ""})
 		}
 	}
 
