@@ -26,7 +26,7 @@
 
         {{range .Posts}}
         <a href="/artigos?a={{.Title}}"><h2>{{.Title}}</h2></a>
-        <p>{{.Time}}</p>
+        <p>{{.TimeString}}</p>
         <p class="desc"><i>{{.Desc}}...</i><p>
         {{end}}
 

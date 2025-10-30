@@ -16,6 +16,7 @@ import (
 type Page struct {
 	Title string
 	Desc string
+	TimeString string
 	Time time.Time
 	Content template.HTML
 }
@@ -73,7 +74,7 @@ func GetPosts(Path string) []Page {
 			if err != nil {panic(err)}
 
 
-			list = append(list, Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm, ""})
+			list = append(list, Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), tm, ""})
 		}
 	}
 
@@ -112,7 +113,7 @@ func InitIndex() {
 
 // Routes the "about" page and sets it up.
 func InitAbout() {
-	page := Page{"Sobre", "", time.Now(), ""}
+	page := Page{"Sobre", "", "", time.Now(), ""}
 
 	page.Content = GetHtml("content/about.md")
 
@@ -134,7 +135,7 @@ func InitPosts() {
 			content := GetHtml(file)
 			tm := GetTime(file)
 
-			template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm, content})
+			template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content})
 		} else {
 			var posts = struct{Title string; Years map[string]Index}{"Todos os artigos", make(map[string]Index)}
 
