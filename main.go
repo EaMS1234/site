@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"net/http"
 	"os"
-	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -17,7 +16,7 @@ import (
 type Page struct {
 	Title string
 	Desc string
-	Time string
+	Time time.Time
 	Content template.HTML
 }
 
@@ -74,13 +73,13 @@ func GetPosts(Path string) []Page {
 			if err != nil {panic(err)}
 
 
-			list = append(list, Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("1/2/2006 - 15:04"), ""})
+			list = append(list, Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm, ""})
 		}
 	}
 
 	// Sorts the list by time
 	sort.Slice(list, func(a, b int) bool {
-		return list[a].Time > list[b].Time
+		return list[a].Time.After(list[b].Time)
 	})
 
 	return list
@@ -113,14 +112,13 @@ func InitIndex() {
 
 // Routes the "about" page and sets it up.
 func InitAbout() {
-	page := Page{"Sobre", "", "", ""}
+	page := Page{"Sobre", "", time.Now(), ""}
 
 	page.Content = GetHtml("content/about.md")
 
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles("web/content.html")).Execute(w, page)
 	});
-
 }
 
 
@@ -134,7 +132,7 @@ func InitPosts() {
 			file := "content/posts/" + target + ".md"
 
 			content := GetHtml(file)
-			tm := GetTime(file).Format("02-01-2006 - 15:04")
+			tm := GetTime(file)
 
 			template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm, content})
 		} else {
@@ -145,15 +143,12 @@ func InitPosts() {
 			}
 
 			for _, post := range GetPosts("content/posts") {
-				time_reg, err :=  regexp.Compile(`\d{1,2}/\d{1,2}/(\d{4}) - \d{1,2}:\d{2}`)
-				if err != nil {panic(err)}
-				year := time_reg.FindStringSubmatch(post.Time)[1]
-
-				// Checks for search term if not empty
+				year := post.Time.Format("2006")
+				
 				if search != "" {
 
 					// If search is not empty, append only the matching content
-					if strings.Contains(post.Title, search) || strings.Contains(post.Desc, search) || strings.Contains(post.Time, search) {
+					if strings.Contains(post.Title, search) || strings.Contains(post.Desc, search) || strings.Contains(post.Time.Format("2006"), search) {
 						posts.Years[year] = Index{append(posts.Years[year].Posts, post), year}
 					}
 				} else {

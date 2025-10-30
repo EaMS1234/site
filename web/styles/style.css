@@ -44,6 +44,14 @@ body {
     margin-left: 4vw;
     margin-right: 4vw;
   }
+
+  #container {
+    flex-direction: column-reverse;
+  }
+
+  #years {
+    margin: 5px;
+  }
 }
 
 hr {
