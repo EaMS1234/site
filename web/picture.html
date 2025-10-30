@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭaMS | {{.Title}}</title>
+    <link rel="stylesheet" href="/styles/style.css" id="style">
+    <link rel="icon" href="/assets/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <h1><strong>ЭaMS</strong></h1>
+        <div id="nav">
+            <a href="/"><strong>Início</strong></a>
+            <a href="/artigos/"><strong>Artigos</strong></a>
+            <a href="/galeria/"><strong>Galeria</strong></a>
+            <a href="/sobre/"><strong>Sobre</strong></a>
+        </div>
+    </header>
+
+    <main>
+        <hr />
+
+        <h2>{{.Title}}</h2>
+        <p><i>{{.TimeString}}</i></p>
+
+        <br />
+
+        <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+
+        {{.Description}}
+
+        <div style="text-align: center;" ><a onclick="history.back()">Voltar</a></div>
+
+        <hr />
+    </main>
+
+    <footer>
+        © Erick Augusto
+        <br/>
+        <a href="https://github.com/eams1234/site">GitHUB</a>
+    </footer>
+</body>
+</html>

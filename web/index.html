@@ -41,8 +41,10 @@
                 <h2>Imagem mais recente</h2>
 
                 {{range .Pictures}}
-                <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
-                <a href="/galeria?i={{.Title}}"><h3>{{.Title}}</h3></a>
+                <a href="/galeria?i={{.FileName}}">
+                    <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+                    <h3>{{.Title}}</h3>
+                </a>
                 <p>{{.Summary}}...</p>
                 {{end}}
                 <hr />

@@ -219,8 +219,16 @@ func InitPosts() {
 
 
 func InitGallery() {
-	http.HandleFunc("/galeria", func(w http.ResponseWriter, r *http.Request) {
-		
+	http.HandleFunc("/galeria/", func(w http.ResponseWriter, r *http.Request) {
+		image := r.URL.Query().Get("i")
+	
+		if image != "" {
+			title := image[:len(image)-4]
+			tm := GetTime(("content/pictures/" + image))
+			desc := GetHtml(("content/pictures/" + image + ".md"))
+
+			template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
+		}
 	});
 }
 
