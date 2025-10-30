@@ -5,7 +5,9 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"regexp"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/yuin/goldmark"
@@ -22,6 +24,7 @@ type Page struct {
 
 type Index struct {
 	Posts []Page
+	Year string
 }
 
 
@@ -123,15 +126,44 @@ func InitAbout() {
 
 // Handles posts
 func InitPosts() {
-	http.HandleFunc("/artigo", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/artigos/", func(w http.ResponseWriter, r *http.Request) {
 		target := r.URL.Query().Get("a")
+		search := r.URL.Query().Get("q")
 
-		file := "content/posts/" + target + ".md"
+		if target != "" {
+			file := "content/posts/" + target + ".md"
 
-		content := GetHtml(file)
-		tm := GetTime(file).Format("02-01-2006 - 15:04")
+			content := GetHtml(file)
+			tm := GetTime(file).Format("02-01-2006 - 15:04")
 
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm, content})
+			template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm, content})
+		} else {
+			var posts = struct{Title string; Years map[string]Index}{"Todos os artigos", make(map[string]Index)}
+
+			if search != "" {
+				posts.Title = "Resultados para \"" + search + "\""
+			}
+
+			for _, post := range GetPosts("content/posts") {
+				time_reg, err :=  regexp.Compile(`\d{1,2}/\d{1,2}/(\d{4}) - \d{1,2}:\d{2}`)
+				if err != nil {panic(err)}
+				year := time_reg.FindStringSubmatch(post.Time)[1]
+
+				// Checks for search term if not empty
+				if search != "" {
+
+					// If search is not empty, append only the matching content
+					if strings.Contains(post.Title, search) || strings.Contains(post.Desc, search) || strings.Contains(post.Time, search) {
+						posts.Years[year] = Index{append(posts.Years[year].Posts, post), year}
+					}
+				} else {
+					// If search is empty, append everything
+					posts.Years[year] = Index{append(posts.Years[year].Posts, post), year}
+				}
+			}
+
+			template.Must(template.ParseFiles("web/posts.html")).Execute(w, posts)
+		}
 	});
 }
 

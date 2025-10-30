@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭaMS | {{.Title}}</title>
+    <link rel="stylesheet" href="/styles/style.css" id="style">
+    <link rel="icon" href="/assets/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <h1><strong>ЭaMS</strong></h1>
+        <div id="nav">
+            <a href="/"><strong>Início</strong></a>
+            <a href="/artigos/"><strong>Artigos</strong></a>
+            <a href="/galeria/"><strong>Galeria</strong></a>
+            <a href="/sobre/"><strong>Sobre</strong></a>
+        </div>
+    </header>
+
+    <main>
+        <hr />
+
+        <h1>{{.Title}}</h1>
+
+        <form action="/artigos" method="get" style="display: flexbox;">
+            <input type="text" name="q" placeholder="Pesquisar..." id="bar" />
+            <input type="submit" placeholder="Pesquisar" id="btn" />
+        </form>
+
+        <div style="display: flex;">
+            <div style="flex: 2;">
+                {{range .Years}}
+                    {{range .Posts}}
+                    <a href="/artigos?a={{.Title}}"><h2>{{.Title}}</h2></a>
+                    <p>{{.Time}}</p>
+                    <p class="desc"><i>{{.Desc}}...</i><p>
+                    {{end}}
+                {{end}}
+            </div>
+
+            <div style="flex: 1; text-align: right;">
+                {{range .Years}}
+                <a href="/artigos?q={{.Year}}"><h2>{{.Year}}</h2></a>
+                {{end}}
+            </div>
+        </div>
+
+        <hr />
+    </main>
+
+    <footer>
+        © Erick Augusto
+        <br/>
+        <a href="https://github.com/eams1234/site">GitHUB</a>
+    </footer>
+</body>
+</html>
