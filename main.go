@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -22,8 +23,19 @@ type Page struct {
 }
 
 
+type Picture struct {
+	Title string
+	Summary string
+	TimeString string
+	FileName string
+	Time time.Time
+	Description template.HTML
+}
+
+
 type Index struct {
 	Posts []Page
+	Pictures []Picture
 	Year string
 }
 
@@ -87,6 +99,43 @@ func GetPosts(Path string) []Page {
 }
 
 
+func GetPictures(Path string) []Picture {
+	data, err := os.ReadDir(Path)
+	if err != nil {panic(err)}
+
+	var list []Picture
+
+	// Regex for files ending in .png or .jpg
+	re := regexp.MustCompile(`.*\.(jpg|png)$`)
+
+	for _, file := range data {
+		if !file.IsDir() && re.MatchString(file.Name()) {
+
+			// Gets the timestamp for the file
+			tm := GetTime(Path + "/" + file.Name())
+
+			// Gets the first 128 characters as a description
+			f, err := os.Open((Path + "/" + file.Name() + ".md"))
+			if err != nil {panic(err)}
+
+			buf := make([]byte, 128)
+
+			head, err := f.Read(buf)
+			if err != nil {panic(err)}
+
+			list = append(list, Picture{file.Name()[:len(file.Name())-4], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+		}
+	}
+
+	// Sorts the list by time
+	sort.Slice(list, func(a, b int) bool {
+		return list[a].Time.After(list[b].Time)
+	})
+
+	return list
+}
+
+
 // Routes static assets like stylesheets and scripts
 func InitAssets() {
 	styles := http.FileServer(http.Dir("web/styles/"))
@@ -96,6 +145,10 @@ func InitAssets() {
 	http.Handle("/styles/", http.StripPrefix("/styles/", styles))
 	// http.Handle("/scripts/", http.StripPrefix("/scripts/", scripts))
 	http.Handle("/assets/", http.StripPrefix("/assets/", assets))
+
+	// Content
+	pictures := http.FileServer(http.Dir("content/pictures"))
+	http.Handle("/pictures/", http.StripPrefix("/pictures/", pictures))
 }
 
 
@@ -105,6 +158,7 @@ func InitIndex() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		index.Posts = GetPosts("content/posts/")
+		index.Pictures = GetPictures("content/pictures/")
 
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, index)
 	})
@@ -150,11 +204,11 @@ func InitPosts() {
 
 					// If search is not empty, append only the matching content
 					if strings.Contains(post.Title, search) || strings.Contains(post.Desc, search) || strings.Contains(post.Time.Format("2006"), search) {
-						posts.Years[year] = Index{append(posts.Years[year].Posts, post), year}
+						posts.Years[year] = Index{append(posts.Years[year].Posts, post), []Picture{}, year}
 					}
 				} else {
 					// If search is empty, append everything
-					posts.Years[year] = Index{append(posts.Years[year].Posts, post), year}
+					posts.Years[year] = Index{append(posts.Years[year].Posts, post), []Picture{}, year}
 				}
 			}
 
@@ -164,11 +218,19 @@ func InitPosts() {
 }
 
 
+func InitGallery() {
+	http.HandleFunc("/galeria", func(w http.ResponseWriter, r *http.Request) {
+		
+	});
+}
+
+
 func main() {
 	InitAssets()
 	InitIndex()
 	InitAbout()
 	InitPosts()
+	InitGallery()
 
 	http.ListenAndServe(":8080", nil)
 }
