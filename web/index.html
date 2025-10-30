@@ -24,11 +24,32 @@
 
         <h1>Início</h1>
 
-        {{range .Posts}}
-        <a href="/artigos?a={{.Title}}"><h2>{{.Title}}</h2></a>
-        <p>{{.TimeString}}</p>
-        <p class="desc"><i>{{.Desc}}...</i><p>
-        {{end}}
+        <div id="container" style="display: flex;">
+            <div style="flex: 5;">
+                <h2>Publicações recentes</h2>
+
+                {{range .Posts}}
+                <a href="/artigos?a={{.Title}}"><h3>{{.Title}}</h3></a>
+                <p>{{.TimeString}}</p>
+                <p class="desc"><i>{{.Desc}}...</i><p>
+                {{end}}
+                <hr />
+                <a href="/artigos/">Ver artigos</a>
+            </div>
+            <div style="flex: 1;"></div>
+            <div style="flex: 5;">
+                <h2>Imagem mais recente</h2>
+
+                {{range .Pictures}}
+                <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+                <a href="/galeria?i={{.Title}}"><h3>{{.Title}}</h3></a>
+                <p>{{.Summary}}...</p>
+                {{end}}
+                <hr />
+                <a href="/galeria/">Ver galeria</a>
+            </div>
+        </div>
+        
 
         <hr />
     </main>

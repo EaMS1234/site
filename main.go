@@ -157,8 +157,8 @@ func InitIndex() {
 	var index Index
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		index.Posts = GetPosts("content/posts/")
-		index.Pictures = GetPictures("content/pictures/")
+		index.Posts = GetPosts("content/posts/")[:3]
+		index.Pictures = GetPictures("content/pictures/")[0:1]
 
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, index)
 	})
