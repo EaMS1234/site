@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭaMS | {{.Title}}</title>
+    <link rel="stylesheet" href="/styles/style.css" id="style">
+    <link rel="icon" href="/assets/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <h1><strong>ЭaMS</strong></h1>
+        <div id="nav">
+            <a href="/"><strong>Início</strong></a>
+            <a href="/artigos/"><strong>Artigos</strong></a>
+            <a href="/galeria/"><strong>Galeria</strong></a>
+            <a href="/sobre/"><strong>Sobre</strong></a>
+        </div>
+    </header>
+
+    <main>
+        <hr />
+
+        <h1>{{.Title}}</h1>
+
+        <div id="container" style="display: flex;">
+            <div style="flex: 4;">
+                <form action="/galeria" method="get" style="display: flex;">
+                    <input type="text" title="Termo da pesquisa" name="q" required="true" placeholder="Pesquisar..." id="bar" style="flex: 6;" />
+                    <div style="flex: 1;"></div>
+                    <input type="submit" title="Procurar artigos" value="Pesquisar" id="btn" style="flex: 2;" />
+                </form>
+
+                <br />
+
+                {{range .Years}}
+                <h2>{{.Year}}</h2>
+                <hr \>
+                    {{range .Pictures}}
+                    <a href="/galeria?i={{.FileName}}"><h3>{{.Title}}</h3></a>
+                    <p>{{.TimeString}}</p>
+                    <p class="desc"><i>{{.Summary}}...</i><p>
+                    {{end}}
+                {{end}}
+            </div>
+
+            <div id="years" style="flex: 1; text-align: right;">
+                {{range .Years}}
+                <a href="/artigos?q={{.Year}}">{{.Year}}</a>
+                {{end}}
+            </div>
+        </div>
+
+        <hr />
+    </main>
+
+    <footer>
+        © Erick Augusto
+        <br/>
+        <a href="https://github.com/eams1234/site">GitHUB</a>
+    </footer>
+</body>
+</html>

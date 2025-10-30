@@ -52,7 +52,7 @@ func GetTime(File string) time.Time {
 // Converts a markdown located at "Path" to valid html
 func GetHtml(Path string) template.HTML {
 	file, err := os.ReadFile(Path)
-	if err != nil {panic(err)}
+	if err != nil {return template.HTML("")}
 
 	var buf bytes.Buffer
 	if err := goldmark.Convert(file, &buf); err != nil {panic(err)}
@@ -116,14 +116,16 @@ func GetPictures(Path string) []Picture {
 
 			// Gets the first 128 characters as a description
 			f, err := os.Open((Path + "/" + file.Name() + ".md"))
-			if err != nil {panic(err)}
+			if err != nil {
+				list = append(list, Picture{file.Name()[:len(file.Name())-4], "", tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+			} else {
+				buf := make([]byte, 128)
 
-			buf := make([]byte, 128)
+				head, err := f.Read(buf)
+				if err != nil {panic(err)}
 
-			head, err := f.Read(buf)
-			if err != nil {panic(err)}
-
-			list = append(list, Picture{file.Name()[:len(file.Name())-4], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+				list = append(list, Picture{file.Name()[:len(file.Name())-4], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+			}
 		}
 	}
 
@@ -221,13 +223,37 @@ func InitPosts() {
 func InitGallery() {
 	http.HandleFunc("/galeria/", func(w http.ResponseWriter, r *http.Request) {
 		image := r.URL.Query().Get("i")
-	
+		search := r.URL.Query().Get("q")
+
 		if image != "" {
 			title := image[:len(image)-4]
 			tm := GetTime(("content/pictures/" + image))
 			desc := GetHtml(("content/pictures/" + image + ".md"))
 
 			template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
+		} else {
+			var gallery = struct{Title string; Years map[string]Index}{"Galeria", make(map[string]Index)}
+
+			if search != "" {
+				gallery.Title = "Resultados para \"" + search + "\""
+			}
+
+			for _, pic := range GetPictures("content/pictures") {
+				year := pic.Time.Format("2006")
+				
+				if search != "" {
+
+					// If search is not empty, append only the matching content
+					if strings.Contains(pic.Title, search) || strings.Contains(pic.Summary, search) || strings.Contains(pic.Time.Format("2006"), search) {
+						gallery.Years[year] = Index{[]Page{}, append(gallery.Years[year].Pictures, pic), year}
+					}
+				} else {
+					// If search is empty, append everything
+					gallery.Years[year] = Index{[]Page{}, append(gallery.Years[year].Pictures, pic), year}
+				}
+			}
+
+			template.Must(template.ParseFiles("web/gallery.html")).Execute(w, gallery)
 		}
 	});
 }
