@@ -121,8 +121,8 @@ func InitAbout() {
 }
 
 
-// Handles posts and other content
-func InitContent() {
+// Handles posts
+func InitPosts() {
 	http.HandleFunc("/artigo", func(w http.ResponseWriter, r *http.Request) {
 		target := r.URL.Query().Get("a")
 
@@ -140,7 +140,7 @@ func main() {
 	InitAssets()
 	InitIndex()
 	InitAbout()
-	InitContent()
+	InitPosts()
 
 	http.ListenAndServe(":8080", nil)
 }
