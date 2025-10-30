@@ -24,20 +24,26 @@
 
         <h1>{{.Title}}</h1>
 
-        <form action="/artigos" method="get" style="display: flexbox;">
-            <input type="text" name="q" placeholder="Pesquisar..." id="bar" />
-            <input type="submit" placeholder="Pesquisar" id="btn" />
-        </form>
+        <div style="display: flex; justify-content: space-evenly;">
+            <div style="flex: 4;">
 
-        <div style="display: flex;">
-            <div style="flex: 2;">
-                {{range .Years}}
-                    {{range .Posts}}
-                    <a href="/artigos?a={{.Title}}"><h2>{{.Title}}</h2></a>
-                    <p>{{.Time}}</p>
-                    <p class="desc"><i>{{.Desc}}...</i><p>
-                    {{end}}
+            <form action="/artigos" method="get" style="display: flex;">
+                <input type="text" title="Termo da pesquisa" name="q" required="true" placeholder="Pesquisar..." id="bar" style="flex: 6;" />
+                <div style="flex: 1;"></div>
+                <input type="submit" title="Procurar artigos" value="Pesquisar" id="btn" style="flex: 2;" />
+            </form>
+
+            <br />
+
+            {{range .Years}}
+            <h2>{{.Year}}</h2>
+            <hr \>
+                {{range .Posts}}
+                <a href="/artigos?a={{.Title}}"><h3>{{.Title}}</h3></a>
+                <p>{{.Time}}</p>
+                <p class="desc"><i>{{.Desc}}...</i><p>
                 {{end}}
+            {{end}}
             </div>
 
             <div style="flex: 1; text-align: right;">
