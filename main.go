@@ -115,7 +115,7 @@ func InitAbout() {
 	page.Content = GetHtml("content/about.md")
 
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/post.html")).Execute(w, page)
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, page)
 	});
 
 }
@@ -131,7 +131,7 @@ func InitPosts() {
 		content := GetHtml(file)
 		tm := GetTime(file).Format("02-01-2006 - 15:04")
 
-		template.Must(template.ParseFiles("web/post.html")).Execute(w, Page{target, "", tm, content})
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm, content})
 	});
 }
 
