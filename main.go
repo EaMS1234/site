@@ -283,24 +283,46 @@ func InitPosts() {
 
 
 func InitGallery() {
-	http.HandleFunc("/galeria/", func(w http.ResponseWriter, r *http.Request) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		en := (r.URL.Path == "/en/pics/")
+
 		image := r.URL.Query().Get("i")
 		search := r.URL.Query().Get("q")
 
 		if image != "" {
 			title := image[:len(image)-4]
+		
 			tm := GetTime(("content/pictures/" + image))
-			desc := GetHtml(("content/pictures/" + image + ".md"))
 
-			template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
+			var desc template.HTML
+
+			if en {
+				desc = GetHtml(("content/pictures/en/" + image + ".md"))
+				template.Must(template.ParseFiles("web/en/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
+			} else {
+				desc = GetHtml(("content/pictures/" + image + ".md"))
+				template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
+			}
 		} else {
 			var gallery = struct{Title string; Years map[string]Index}{"Galeria", make(map[string]Index)}
 
 			if search != "" {
-				gallery.Title = "Resultados para \"" + search + "\""
+				if en {
+					gallery.Title = "Results for \"" + search + "\""
+				} else {
+					gallery.Title = "Resultados para \"" + search + "\""
+				}
 			}
 
-			for _, pic := range GetPictures("content/pictures", "") {
+			var list []Picture
+
+			if en {
+				list = GetPictures("content/pictures", "/en")
+			} else {
+				list = GetPictures("content/pictures", "")
+			}
+
+			for _, pic := range list {
 				year := pic.Time.Format("2006")
 				
 				if search != "" {
@@ -315,9 +337,16 @@ func InitGallery() {
 				}
 			}
 
-			template.Must(template.ParseFiles("web/gallery.html")).Execute(w, gallery)
+			if en {
+				template.Must(template.ParseFiles("web/en/gallery.html")).Execute(w, gallery)
+			} else {
+				template.Must(template.ParseFiles("web/gallery.html")).Execute(w, gallery)
+			}
 		}
-	});
+	}
+
+	http.HandleFunc("/galeria/", handler)
+	http.HandleFunc("/en/pics/", handler)
 }
 
 

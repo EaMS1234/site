@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,18 +11,17 @@
 
     <header>
         <!-- <h1><strong>ЭaMS</strong></h1> -->
-
         <picture>
             <source srcset="/assets/logo_dark.png" media="(prefers-color-scheme: dark)">
             <source srcset="/assets/logo_light.png" media="(prefers-color-scheme: light)">
             <img src="/assets/logo_light.png" alt="ЭaMS" style="height: 42px; margin-bottom: 16px;">
         </picture>
-
+        
         <div id="nav">
-            <a href="/"><strong>Início</strong></a>
-            <a href="/artigos/"><strong>Artigos</strong></a>
-            <a href="/galeria/"><strong>Galeria</strong></a>
-            <a href="/sobre/"><strong>Sobre</strong></a>
+            <a href="/en/"><strong>Home</strong></a>
+            <a href="/en/blog/"><strong>Blog</strong></a>
+            <a href="/en/pics/"><strong>Pictures</strong></a>
+            <a href="/en/about/"><strong>About</strong></a>
         </div>
     </header>
 
@@ -33,10 +32,10 @@
 
         <div id="container" style="display: flex;">
             <div style="flex: 4;">
-                <form action="/galeria" method="get" style="display: flex;">
-                    <input type="text" title="Termo da pesquisa" name="q" required="true" placeholder="Pesquisar..." id="bar" style="flex: 6;" />
+                <form action="/en/pics" method="get" style="display: flex;">
+                    <input type="text" title="Keywords" name="q" required="true" placeholder="Search pictures..." id="bar" style="flex: 6;" />
                     <div style="flex: 1;"></div>
-                    <input type="submit" title="Buscar imagens" value="Pesquisar" id="btn" style="flex: 2;" />
+                    <input type="submit" title="Search pictures" value="Search" id="btn" style="flex: 2;" />
                 </form>
 
                 <br />
@@ -48,7 +47,7 @@
                 <div class="grid-gallery" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
                     {{range .Pictures}}
                     <div>
-                        <a href="/galeria?i={{.FileName}}">
+                        <a href="/en/pics?i={{.FileName}}">
                             <img class="img-gallery" src="/pictures/{{.FileName}}" alt="{{.Title}}">
                             <h3>{{.Title}}</h3>
                         </a>
@@ -62,7 +61,7 @@
 
             <div id="years" style="flex: 1; text-align: right;">
                 {{range .Years}}
-                <a href="/galeria?q={{.Year}}">{{.Year}}</a>
+                <a href="/en/pics?q={{.Year}}">{{.Year}}</a>
                 {{end}}
             </div>
         </div>
