@@ -1,10 +1,7 @@
 FROM golang:alpine
 WORKDIR /site/
 
-COPY go.mod ./
-COPY main.go ./
-COPY content ./content
-COPY web ./web
+copy . .
 
 RUN go mod tidy
 

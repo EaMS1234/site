@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -403,11 +404,33 @@ func handle404(w http.ResponseWriter, r *http.Request, lang string) {
 func main() {
 	content_dir := "content/"
 
+	// Checks if content contains the necessary folders
+	_, err1 := os.Stat(content_dir + "/posts")
+	_, err2 := os.Stat(content_dir + "/pictures")
+	_, err3 := os.Stat(content_dir + "/static")
+
+	if err1 != nil {
+		os.Mkdir((content_dir + "/posts"), 0755)
+		os.Mkdir((content_dir + "/posts/en"), 0755)
+	}
+
+	if err2 != nil {
+		os.Mkdir((content_dir + "/pictures"), 0755)
+		os.Mkdir((content_dir + "/pictures/en"), 0755)
+	}
+
+	if err3 != nil {
+		os.Mkdir((content_dir + "/static"), 0755)
+	}
+
+
 	InitAssets(content_dir)
 	InitIndex(content_dir)
 	InitAbout(content_dir)
 	InitPosts(content_dir)
 	InitGallery(content_dir)
+
+	log.Output(1, "Serving on port 8080")
 
 	http.ListenAndServe(":8080", nil)
 }
