@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ЭaMS | Home</title>
+    <title>ЭaMS | {{.Title}}</title>
     <link rel="stylesheet" href="/styles/style.css" id="style">
     <link rel="icon" href="/assets/favicon.ico">
 </head>
@@ -28,41 +28,35 @@
     <main>
         <hr />
 
-        <h1>Home</h1>
+        <h1>{{.Title}}</h1>
 
-        <div id="container" style="display: flex; gap: 50px;">
-            <div style="flex: 5;">
-                <h2 style="text-align: center;">Recent posts</h2>
+        <div id="container" style="display: flex;">
+            <div style="flex: 4;">
+                <form action="/en/blog" method="get" style="display: flex;">
+                    <input type="text" title="Keywords" name="q" required="true" placeholder="Search posts..." id="bar" style="flex: 6;" />
+                    <div style="flex: 1;"></div>
+                    <input type="submit" title="Search posts" value="Search" id="btn" style="flex: 2;" />
+                </form>
 
-                {{range .Posts}}
-                <a href="/en/blog?a={{.Title}}"><h3>{{.Title}}</h3></a>
-                <p>{{.TimeString}}</p>
-                <p class="desc"><i>{{.Desc}}...</i><p>
+                <br />
+
+                {{range .Years}}
+                <h2>{{.Year}}</h2>
+                <hr \>
+                    {{range .Posts}}
+                    <a href="/en/blog?a={{.Title}}"><h3>{{.Title}}</h3></a>
+                    <p>{{.TimeString}}</p>
+                    <p class="desc"><i>{{.Desc}}...</i><p>
+                    {{end}}
                 {{end}}
-
-                <hr />
-                <a href="/en/blog/">Read the blog</a>
             </div>
 
-            <div style="flex: 5;">
-                <h2 style="text-align: center;">Latest Picture</h2>
-
-                {{range .Pictures}}
-                <a href="/en/pics?i={{.FileName}}">
-                    <div style="text-align: center;">
-                        <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
-                    </div>
-                    <h3>{{.Title}}</h3>
-                </a>
-                <p><i>{{.TimeString}}</i></p>
-                <p>{{.Summary}}...</p>
+            <div id="years" style="flex: 1; text-align: right;">
+                {{range .Years}}
+                <a href="/en/blog?q={{.Year}}">{{.Year}}</a>
                 {{end}}
-
-                <hr />
-                <a href="/en/pics/">View more pictures</a>
             </div>
         </div>
-        
 
         <hr />
     </main>

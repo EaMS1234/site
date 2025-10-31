@@ -208,25 +208,53 @@ func InitAbout() {
 
 // Handles posts
 func InitPosts() {
-	http.HandleFunc("/artigos/", func(w http.ResponseWriter, r *http.Request) {
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		en := (r.URL.Path == "/en/blog/")
+
 		target := r.URL.Query().Get("a")
 		search := r.URL.Query().Get("q")
 
 		if target != "" {
-			file := "content/posts/" + target + ".md"
+			var file string
+
+			if en {
+				file = "content/posts/en/" + target + ".md"
+			} else {
+				file = "content/posts/" + target + ".md"
+			}
 
 			content := GetHtml(file)
 			tm := GetTime(file)
 
-			template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content})
+			if en {
+				template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content})
+			} else {
+				template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content})
+			}
 		} else {
 			var posts = struct{Title string; Years map[string]Index}{"Todos os artigos", make(map[string]Index)}
 
-			if search != "" {
-				posts.Title = "Resultados para \"" + search + "\""
+			if en {
+				posts.Title = "Blog"
 			}
 
-			for _, post := range GetPosts("content/posts") {
+			if search != "" {
+				if en {
+					posts.Title = "Results for \"" + search + "\""
+				} else {
+					posts.Title = "Resultados para \"" + search + "\""
+				}
+			}
+
+			var list []Page;
+
+			if en {
+				list = GetPosts("content/posts/en")
+			} else {
+				list = GetPosts("content/posts")
+			}
+
+			for _, post := range list {
 				year := post.Time.Format("2006")
 				
 				if search != "" {
@@ -241,9 +269,16 @@ func InitPosts() {
 				}
 			}
 
-			template.Must(template.ParseFiles("web/posts.html")).Execute(w, posts)
+			if en {
+				template.Must(template.ParseFiles("web/en/posts.html")).Execute(w, posts)
+			} else {
+				template.Must(template.ParseFiles("web/posts.html")).Execute(w, posts)
+			}
 		}
-	});
+	} 
+
+	http.HandleFunc("/artigos/", handler);
+	http.HandleFunc("/en/blog/", handler);
 }
 
 
