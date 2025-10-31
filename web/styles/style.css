@@ -52,6 +52,21 @@ body {
   #years {
     margin: 5px;
   }
+
+  .grid-gallery {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.img-gallery {
+    object-fit: cover;
+    aspect-ratio: 1/1;
+    width: 100%;
 }
 
 hr {

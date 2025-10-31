@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 
@@ -55,7 +56,7 @@ func GetHtml(Path string) template.HTML {
 	if err != nil {return template.HTML("")}
 
 	var buf bytes.Buffer
-	if err := goldmark.Convert(file, &buf); err != nil {panic(err)}
+	if err := goldmark.New(goldmark.WithRendererOptions(html.WithUnsafe())).Convert(file, &buf); err != nil {panic(err)}
 
 	html := template.HTML(buf.String())
 
@@ -150,7 +151,9 @@ func InitAssets() {
 
 	// Content
 	pictures := http.FileServer(http.Dir("content/pictures"))
+	static := http.FileServer(http.Dir("content/static"))
 	http.Handle("/pictures/", http.StripPrefix("/pictures/", pictures))
+	http.Handle("/static/", http.StripPrefix("/static/", static))
 }
 
 

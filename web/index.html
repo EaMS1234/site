@@ -24,7 +24,7 @@
 
         <h1>Início</h1>
 
-        <div id="container" style="display: flex;">
+        <div id="container" style="display: flex; gap: 50px;">
             <div style="flex: 5;">
                 <h2 style="text-align: center;">Publicações recentes</h2>
 
@@ -38,8 +38,6 @@
                 <a href="/artigos/">Ver artigos</a>
             </div>
 
-            <div style="flex: 1;"></div>
-            
             <div style="flex: 5;">
                 <h2 style="text-align: center;">Imagem mais recente</h2>
 
@@ -50,6 +48,7 @@
                     </div>
                     <h3>{{.Title}}</h3>
                 </a>
+                <p><i>{{.TimeString}}</i></p>
                 <p>{{.Summary}}...</p>
                 {{end}}
 
