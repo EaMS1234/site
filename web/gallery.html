@@ -10,7 +10,14 @@
 <body>
 
     <header>
-        <h1><strong>ЭaMS</strong></h1>
+        <!-- <h1><strong>ЭaMS</strong></h1> -->
+
+        <picture>
+            <source srcset="/assets/logo_dark.png" media="(prefers-color-scheme: dark)">
+            <source srcset="/assets/logo_light.png" media="(prefers-color-scheme: light)">
+            <img src="/assets/logo_light.png" alt="ЭaMS" style="height: 42px; margin-bottom: 16px;">
+        </picture>
+
         <div id="nav">
             <a href="/"><strong>Início</strong></a>
             <a href="/artigos/"><strong>Artigos</strong></a>
@@ -29,7 +36,7 @@
                 <form action="/galeria" method="get" style="display: flex;">
                     <input type="text" title="Termo da pesquisa" name="q" required="true" placeholder="Pesquisar..." id="bar" style="flex: 6;" />
                     <div style="flex: 1;"></div>
-                    <input type="submit" title="Procurar artigos" value="Pesquisar" id="btn" style="flex: 2;" />
+                    <input type="submit" title="Buscar imagens" value="Pesquisar" id="btn" style="flex: 2;" />
                 </form>
 
                 <br />
