@@ -162,6 +162,16 @@ func InitIndex(content_dir string) {
 	var index Index
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/en/" && r.URL.Path != "/" {
+			languages := r.Header.Get("Accept-Languages")
+			if strings.Contains(languages, "pt") || strings.Contains(languages, "pt-BR") {
+				handle404(w, r, "")
+			} else {
+				handle404(w, r, "en")
+			}
+			return
+		}
+
 		en := (r.URL.Path == "/en/")
 
 		if en {
@@ -221,6 +231,17 @@ func InitPosts(content_dir string) {
 				file = content_dir + "/posts/en/" + target + ".md"
 			} else {
 				file = content_dir + "/posts/" + target + ".md"
+			}
+
+			// Checks if the file exists
+			_, err := os.Stat(file)
+			if err != nil {
+				if en {
+					handle404(w, r, "en")
+				} else {
+					handle404(w, r, "")
+				}
+				return
 			}
 
 			content := GetHtml(file)
@@ -290,8 +311,31 @@ func InitGallery(content_dir string) {
 		search := r.URL.Query().Get("q")
 
 		if image != "" {
+			// This means it's not a valid image, as the .jpg and .png endings are
+			// both exactly 4 characters long.
+			if len(image) <= 4 {
+				if en {
+					handle404(w, r, "en")
+					return
+				} else {
+					handle404(w, r, "")
+					return
+				}
+			}
+
 			title := image[:len(image)-4]
 		
+			// Checks if the file exists
+			_, err := os.Stat(content_dir + "/pictures/" + image)
+			if err != nil {
+				if en {
+					handle404(w, r, "en")
+				} else {
+					handle404(w, r, "")
+				}
+				return
+			}
+
 			tm := GetTime((content_dir + "/pictures/" + image))
 
 			var desc template.HTML
@@ -347,6 +391,12 @@ func InitGallery(content_dir string) {
 
 	http.HandleFunc("/galeria/", handler)
 	http.HandleFunc("/en/pics/", handler)
+}
+
+
+func handle404(w http.ResponseWriter, r *http.Request, lang string) {
+	w.WriteHeader(404)
+	template.Must(template.ParseFiles("web/" + lang + "/404.html")).Execute(w, r.URL.String())
 }
 
 

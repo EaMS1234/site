@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЭaMS | 404</title>
+    <link rel="stylesheet" href="/styles/style.css" id="style">
+    <link rel="icon" href="/assets/favicon.ico">
+</head>
+<body>
+
+    <header>
+        <!-- <h1><strong>ЭaMS</strong></h1> -->
+        <picture>
+            <source srcset="/assets/logo_dark.png" media="(prefers-color-scheme: dark)">
+            <source srcset="/assets/logo_light.png" media="(prefers-color-scheme: light)">
+            <img src="/assets/logo_light.png" alt="ЭaMS" style="height: 42px; margin-bottom: 16px;">
+        </picture>
+        
+        <div id="nav" style="display: flex; gap: 8px;">
+            <a href="/en/"><strong>Home</strong></a>
+            <a href="/en/blog/"><strong>Blog</strong></a>
+            <a href="/en/pics/"><strong>Pictures</strong></a>
+            <a href="/en/about/"><strong>About</strong></a>
+            <span style="flex-grow: 1;"></span>
+            <a href="/"><u>pt-BR</u></a>
+        </div>
+    </header>
+
+    <main style="text-align: center;">
+        <hr />
+
+        <h1>Error 404</h1>
+        <p style="text-align: center;">Could not find {{.}}</p>
+        <p style="text-align: center;">Check the URL and try again</p>
+
+        <div style="text-align: center;" ><a onclick="history.back()">Return to previous page</a></div>
+
+        <hr />
+    </main>
+
+    <footer>
+        © Erick Augusto
+        <br/>
+        <a href="https://github.com/eams1234/site">GitHUB</a>
+    </footer>
+</body>
+</html>
