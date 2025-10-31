@@ -162,8 +162,18 @@ func InitIndex() {
 	var index Index
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		index.Posts = GetPosts("content/posts/")[:3]
-		index.Pictures = GetPictures("content/pictures/")[0:1]
+		index.Posts = GetPosts("content/posts/")
+		index.Pictures = GetPictures("content/pictures/")
+
+		// Show at most 3 posts
+		if len(index.Posts) >= 3 {
+			index.Posts = index.Posts[:3]
+		}
+
+		// Show at most only one picture
+		if len(index.Pictures) > 1 {
+			index.Pictures = index.Pictures[0:1]
+		}
 
 		template.Must(template.ParseFiles("web/index.html")).Execute(w, index)
 	})
