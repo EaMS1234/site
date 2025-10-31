@@ -140,7 +140,7 @@ func GetPictures(Path string, lang string) []Picture {
 
 
 // Routes static assets like stylesheets and scripts
-func InitAssets() {
+func InitAssets(content_dir string) {
 	styles := http.FileServer(http.Dir("web/styles/"))
 	// scripts := http.FileServer(http.Dir("web/scripts/"))
 	assets := http.FileServer(http.Dir("web/assets/"))
@@ -150,26 +150,26 @@ func InitAssets() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", assets))
 
 	// Content
-	pictures := http.FileServer(http.Dir("content/pictures"))
-	static := http.FileServer(http.Dir("content/static"))
+	pictures := http.FileServer(http.Dir(content_dir + "/pictures"))
+	static := http.FileServer(http.Dir(content_dir + "/static"))
 	http.Handle("/pictures/", http.StripPrefix("/pictures/", pictures))
 	http.Handle("/static/", http.StripPrefix("/static/", static))
 }
 
 
 // Routes the main page and sets it up.
-func InitIndex() {
+func InitIndex(content_dir string) {
 	var index Index
 
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		en := (r.URL.Path == "/en/")
 
 		if en {
-			index.Posts = GetPosts("content/posts/en/")
-			index.Pictures = GetPictures("content/pictures/", "/en")
+			index.Posts = GetPosts(content_dir + "/posts/en/")
+			index.Pictures = GetPictures(content_dir + "/pictures/", "/en")
 		} else {
-			index.Posts = GetPosts("content/posts/")
-			index.Pictures = GetPictures("content/pictures/", "")
+			index.Posts = GetPosts(content_dir + "/posts/")
+			index.Pictures = GetPictures((content_dir + "/pictures/"), "")
 		}
 
 		// Show at most 3 posts
@@ -195,19 +195,19 @@ func InitIndex() {
 
 
 // Routes the "about" page and sets it up.
-func InitAbout() {
+func InitAbout(content_dir string) {
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), GetHtml("content/about.md")})
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), GetHtml(content_dir + "/about.md")})
 	});
 
 	http.HandleFunc("/en/about/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), GetHtml("content/about.en.md")})
+		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), GetHtml(content_dir + "/about.en.md")})
 	});
 }
 
 
 // Handles posts
-func InitPosts() {
+func InitPosts(content_dir string) {
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		en := (r.URL.Path == "/en/blog/")
 
@@ -218,9 +218,9 @@ func InitPosts() {
 			var file string
 
 			if en {
-				file = "content/posts/en/" + target + ".md"
+				file = content_dir + "/posts/en/" + target + ".md"
 			} else {
-				file = "content/posts/" + target + ".md"
+				file = content_dir + "/posts/" + target + ".md"
 			}
 
 			content := GetHtml(file)
@@ -249,9 +249,9 @@ func InitPosts() {
 			var list []Page;
 
 			if en {
-				list = GetPosts("content/posts/en")
+				list = GetPosts(content_dir + "/posts/en")
 			} else {
-				list = GetPosts("content/posts")
+				list = GetPosts(content_dir + "/posts")
 			}
 
 			for _, post := range list {
@@ -282,7 +282,7 @@ func InitPosts() {
 }
 
 
-func InitGallery() {
+func InitGallery(content_dir string) {
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		en := (r.URL.Path == "/en/pics/")
 
@@ -292,15 +292,15 @@ func InitGallery() {
 		if image != "" {
 			title := image[:len(image)-4]
 		
-			tm := GetTime(("content/pictures/" + image))
+			tm := GetTime((content_dir + "/pictures/" + image))
 
 			var desc template.HTML
 
 			if en {
-				desc = GetHtml(("content/pictures/en/" + image + ".md"))
+				desc = GetHtml((content_dir + "/pictures/en/" + image + ".md"))
 				template.Must(template.ParseFiles("web/en/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
 			} else {
-				desc = GetHtml(("content/pictures/" + image + ".md"))
+				desc = GetHtml((content_dir + "/pictures/" + image + ".md"))
 				template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, desc})
 			}
 		} else {
@@ -317,9 +317,9 @@ func InitGallery() {
 			var list []Picture
 
 			if en {
-				list = GetPictures("content/pictures", "/en")
+				list = GetPictures(content_dir + "/pictures", "/en")
 			} else {
-				list = GetPictures("content/pictures", "")
+				list = GetPictures(content_dir + "/pictures", "")
 			}
 
 			for _, pic := range list {
@@ -351,11 +351,13 @@ func InitGallery() {
 
 
 func main() {
-	InitAssets()
-	InitIndex()
-	InitAbout()
-	InitPosts()
-	InitGallery()
+	content_dir := "content/"
+
+	InitAssets(content_dir)
+	InitIndex(content_dir)
+	InitAbout(content_dir)
+	InitPosts(content_dir)
+	InitGallery(content_dir)
 
 	http.ListenAndServe(":8080", nil)
 }
