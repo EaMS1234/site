@@ -196,12 +196,12 @@ func InitIndex() {
 
 // Routes the "about" page and sets it up.
 func InitAbout() {
-	page := Page{"Sobre", "", "", time.Now(), ""}
-
-	page.Content = GetHtml("content/about.md")
-
 	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, page)
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), GetHtml("content/about.md")})
+	});
+
+	http.HandleFunc("/en/about/", func(w http.ResponseWriter, r *http.Request) {
+		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), GetHtml("content/about.en.md")})
 	});
 }
 
