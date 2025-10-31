@@ -100,7 +100,7 @@ func GetPosts(Path string) []Page {
 }
 
 
-func GetPictures(Path string) []Picture {
+func GetPictures(Path string, lang string) []Picture {
 	data, err := os.ReadDir(Path)
 	if err != nil {panic(err)}
 
@@ -116,7 +116,7 @@ func GetPictures(Path string) []Picture {
 			tm := GetTime(Path + "/" + file.Name())
 
 			// Gets the first 128 characters as a description
-			f, err := os.Open((Path + "/" + file.Name() + ".md"))
+			f, err := os.Open((Path + lang + "/" + file.Name() + ".md"))
 			if err != nil {
 				list = append(list, Picture{file.Name()[:len(file.Name())-4], "", tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
 			} else {
@@ -161,9 +161,16 @@ func InitAssets() {
 func InitIndex() {
 	var index Index
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		index.Posts = GetPosts("content/posts/")
-		index.Pictures = GetPictures("content/pictures/")
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		en := (r.URL.Path == "/en/")
+
+		if en {
+			index.Posts = GetPosts("content/posts/en/")
+			index.Pictures = GetPictures("content/pictures/", "/en")
+		} else {
+			index.Posts = GetPosts("content/posts/")
+			index.Pictures = GetPictures("content/pictures/", "")
+		}
 
 		// Show at most 3 posts
 		if len(index.Posts) >= 3 {
@@ -175,8 +182,15 @@ func InitIndex() {
 			index.Pictures = index.Pictures[0:1]
 		}
 
-		template.Must(template.ParseFiles("web/index.html")).Execute(w, index)
-	})
+		if en {
+			template.Must(template.ParseFiles("web/en/index.html")).Execute(w, index)
+		} else {
+			template.Must(template.ParseFiles("web/index.html")).Execute(w, index)
+		}
+	}
+
+	http.HandleFunc("/", handler)
+	http.HandleFunc("/en/", handler)
 }
 
 
@@ -251,7 +265,7 @@ func InitGallery() {
 				gallery.Title = "Resultados para \"" + search + "\""
 			}
 
-			for _, pic := range GetPictures("content/pictures") {
+			for _, pic := range GetPictures("content/pictures", "") {
 				year := pic.Time.Format("2006")
 				
 				if search != "" {
