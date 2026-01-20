@@ -40,6 +40,13 @@ type Index struct {
 }
 
 
+// Persistent list of posts. Is dynamically updated during runtime.
+var posts = make(map[string][]Page)
+
+// Persistent list of pictures. Also updated.
+var pictures = make(map[string][]Picture)
+
+
 // Simple function for getting the timestamp of a file
 func GetTime(File string) time.Time {
 	file, err := os.Stat(File)
@@ -64,38 +71,38 @@ func GetHtml(Path string) template.HTML {
 
 
 // Returns a list of the files on "Path"
-func GetPosts(Path string) []Page {
-	data, err := os.ReadDir(Path)
-	if err != nil {panic(err)}
+func GetPosts() {
+	for _, lang := range []string{"", "en"} {
+		posts[lang] = nil
 
-	var list []Page
+		data, err := os.ReadDir("content/posts/" + lang + "/")
+		if err != nil {panic(err)}
 
-	for _, file := range data {
-		if !file.IsDir() {
+		for _, file := range data {
+			if !file.IsDir() {
 
-			// Gets the timestamp for the file
-			tm := GetTime(Path + "/" + file.Name())
+				// Gets the timestamp for the file
+				tm := GetTime("content/posts/" + lang + "/" + file.Name())
 
-			// Gets the first 128 characters as a description
-			f, err := os.Open((Path + "/" + file.Name()))
-			if err != nil {panic(err)}
+				// Gets the first 128 characters as a description
+				f, err := os.Open(("content/posts/" + lang + "/" + file.Name()))
+				if err != nil {panic(err)}
 
-			buf := make([]byte, 128)
+				buf := make([]byte, 128)
 
-			head, err := f.Read(buf)
-			if err != nil {panic(err)}
+				head, err := f.Read(buf)
+				if err != nil {panic(err)}
 
 
-			list = append(list, Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), tm, ""})
+				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), tm, ""})
+			}
 		}
+
+		// Sorts the list by time
+		sort.Slice(posts[lang], func(a, b int) bool {
+			return posts[lang][a].Time.After(posts[lang][b].Time)
+		})
 	}
-
-	// Sorts the list by time
-	sort.Slice(list, func(a, b int) bool {
-		return list[a].Time.After(list[b].Time)
-	})
-
-	return list
 }
 
 
@@ -152,5 +159,4 @@ func handle404(w http.ResponseWriter, r *http.Request, lang string) {
 	w.WriteHeader(404)
 	template.Must(template.ParseFiles("web/" + lang + "/404.html")).Execute(w, r.URL.String())
 }
-
 

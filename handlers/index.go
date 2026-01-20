@@ -11,23 +11,16 @@ import (
 func InitIndex(w http.ResponseWriter, r *http.Request) {
 	var index Index	
 
-	// if r.URL.Path != "/en/" && r.URL.Path != "/" {
-	// 	languages := r.Header.Get("Accept-Languages")
-	// 	if strings.Contains(languages, "pt") || strings.Contains(languages, "pt-BR") {
-	// 		handle404(w, r, "")
-	// 	} else {
-	// 		handle404(w, r, "en")
-	// 	}
-	// 	return
-	// }
-
 	en := (r.URL.Path == "/en/")
 
+	// Updates the list of posts asynchronously
+	go GetPosts()
+
 	if en {
-		index.Posts = GetPosts("content/posts/en/")
+		index.Posts = posts["en"]
 		index.Pictures = GetPictures("content/pictures/", "/en")
 	} else {
-		index.Posts = GetPosts("content/posts/")
+		index.Posts = posts[""]
 		index.Pictures = GetPictures("content/pictures/", "")
 	}
 

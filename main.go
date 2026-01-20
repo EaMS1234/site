@@ -33,6 +33,9 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	// Loads the content
+	handlers.GetPosts()
+
 	// Static files
 	mux.HandleFunc("/assets/{file}", handlers.Assets)
 	mux.HandleFunc("/styles/{file}", handlers.Styles)
