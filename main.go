@@ -35,6 +35,7 @@ func main() {
 
 	// Loads the content
 	handlers.GetPosts()
+	handlers.GetPictures()
 
 	// Static files
 	mux.HandleFunc("/assets/{file}", handlers.Assets)
