@@ -50,7 +50,7 @@
                 <div class="grid-gallery" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
                     {{range .Pictures}}
                     <div>
-                        <a href="/galeria?i={{.FileName}}">
+                        <a href="/galeria/{{.FileName}}">
                             <img class="img-gallery" src="/pictures/{{.FileName}}" alt="{{.Title}}">
                             <h3>{{.Title}}</h3>
                         </a>

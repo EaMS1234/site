@@ -37,7 +37,7 @@
                 <h2 style="text-align: center;">Publicações recentes</h2>
 
                 {{range .Posts}}
-                <a href="/artigos?a={{.Title}}"><h3>{{.Title}}</h3></a>
+                <a href="/artigos/{{.Title}}"><h3>{{.Title}}</h3></a>
                 <p>{{.TimeString}}</p>
                 <p class="desc"><i>{{.Desc}}...</i><p>
                 {{end}}
@@ -50,7 +50,7 @@
                 <h2 style="text-align: center;">Imagem mais recente</h2>
 
                 {{range .Pictures}}
-                <a href="/galeria?i={{.FileName}}">
+                <a href="/galeria/{{.FileName}}">
                     <div style="text-align: center;">
                         <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
                     </div>

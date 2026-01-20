@@ -46,7 +46,7 @@
                 <h2>{{.Year}}</h2>
                 <hr \>
                     {{range .Posts}}
-                    <a href="/en/blog?a={{.Title}}"><h3>{{.Title}}</h3></a>
+                    <a href="/en/blog/{{.Title}}"><h3>{{.Title}}</h3></a>
                     <p>{{.TimeString}}</p>
                     <p class="desc"><i>{{.Desc}}...</i><p>
                     {{end}}
