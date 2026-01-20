@@ -106,42 +106,42 @@ func GetPosts() {
 }
 
 
-func GetPictures(Path string, lang string) []Picture {
-	data, err := os.ReadDir(Path)
-	if err != nil {panic(err)}
+func GetPictures() {
+	for _, lang := range []string{"", "en"} {
+		pictures[lang] = nil
 
-	var list []Picture
+		data, err := os.ReadDir("content/pictures/")
+		if err != nil {panic(err)}
 
-	// Regex for files ending in .png or .jpg
-	re := regexp.MustCompile(`.*\.(jpg|png)$`)
+		// Regex for files ending in .png or .jpg
+		re := regexp.MustCompile(`.*\.(jpg|png)$`)
 
-	for _, file := range data {
-		if !file.IsDir() && re.MatchString(file.Name()) {
+		for _, file := range data {
+			if !file.IsDir() && re.MatchString(file.Name()) {
 
-			// Gets the timestamp for the file
-			tm := GetTime(Path + "/" + file.Name())
+				// Gets the timestamp for the file
+				tm := GetTime("content/pictures/" + file.Name())
 
-			// Gets the first 128 characters as a description
-			f, err := os.Open((Path + lang + "/" + file.Name() + ".md"))
-			if err != nil {
-				list = append(list, Picture{file.Name()[:len(file.Name())-4], "", tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
-			} else {
-				buf := make([]byte, 128)
+				// Gets the first 128 characters as a description
+				f, err := os.Open(("content/pictures/" + lang + "/" + file.Name() + ".md"))
+				if err != nil {
+					pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], "", tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+				} else {
+					buf := make([]byte, 128)
 
-				head, err := f.Read(buf)
-				if err != nil {panic(err)}
+					head, err := f.Read(buf)
+					if err != nil {panic(err)}
 
-				list = append(list, Picture{file.Name()[:len(file.Name())-4], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+					pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+				}
 			}
 		}
+
+		// Sorts the list by time
+		sort.Slice(pictures[lang], func(a, b int) bool {
+			return pictures[lang][a].Time.After(pictures[lang][b].Time)
+		})
 	}
-
-	// Sorts the list by time
-	sort.Slice(list, func(a, b int) bool {
-		return list[a].Time.After(list[b].Time)
-	})
-
-	return list
 }
 
 

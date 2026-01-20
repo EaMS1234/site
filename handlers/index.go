@@ -15,13 +15,14 @@ func InitIndex(w http.ResponseWriter, r *http.Request) {
 
 	// Updates the list of posts asynchronously
 	go GetPosts()
+	go GetPictures()
 
 	if en {
 		index.Posts = posts["en"]
-		index.Pictures = GetPictures("content/pictures/", "/en")
+		index.Pictures = pictures["en"]
 	} else {
 		index.Posts = posts[""]
-		index.Pictures = GetPictures("content/pictures/", "")
+		index.Pictures = pictures[""]
 	}
 
 	// Show at most 3 posts

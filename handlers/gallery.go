@@ -54,12 +54,14 @@ func Gallery(w http.ResponseWriter, r *http.Request) {
 		gallery.Title = "Pictures"
 	}
 
+	go GetPictures()
+
 	var list []Picture
 
 	if en {
-		list = GetPictures("content/pictures", "/en")
+		list = pictures["en"]
 	} else {
-		list = GetPictures("content/pictures", "")
+		list = pictures[""]
 	}
 
 	for _, pic := range list {
