@@ -8,6 +8,7 @@ import (
 	"github.com/eams1234/site/handlers"
 )
 
+
 func main() {
 	content_dir := "content/"
 
@@ -36,7 +37,7 @@ func main() {
 	mux.HandleFunc("/assets/{file}", handlers.Assets)
 	mux.HandleFunc("/styles/{file}", handlers.Styles)
 	mux.HandleFunc("/static/{file}", handlers.Static)
-	mux.HandleFunc("/pictures/{file}", handlers.Pictures)
+	mux.HandleFunc("/img/{file}", handlers.Images)
 
 	// Index
 	mux.HandleFunc("/", handlers.InitIndex)
@@ -49,13 +50,13 @@ func main() {
 	mux.HandleFunc("/artigos/", handlers.Blog)
 	mux.HandleFunc("/en/blog/", handlers.Blog)
 	mux.HandleFunc("/galeria/", handlers.Gallery)
-	mux.HandleFunc("/en/pics/", handlers.Gallery)
+	mux.HandleFunc("/en/pictures/", handlers.Gallery)
 
 	// Individual posts
 	mux.HandleFunc("/artigos/{post}", handlers.Posts)
 	mux.HandleFunc("/en/blog/{post}", handlers.Posts)
-	mux.HandleFunc("/galeria/{pic}", handlers.Pics)
-	mux.HandleFunc("/en/pics/{pic}", handlers.Pics)
+	mux.HandleFunc("/galeria/{pic}", handlers.Pictures)
+	mux.HandleFunc("/en/pictures/{pic}", handlers.Pictures)
 
 	log.Output(1, "Serving on port 8080")
 

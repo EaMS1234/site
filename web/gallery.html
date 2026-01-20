@@ -24,7 +24,7 @@
             <a href="/galeria/"><strong>Galeria</strong></a>
             <a href="/sobre/"><strong>Sobre</strong></a>
             <span style="flex-grow: 1;"></span>
-            <a href="/en/pics/"><strong>en</strong></a>
+            <a href="/en/pictures/"><strong>en</strong></a>
         </div>
     </header>
 
@@ -51,7 +51,7 @@
                     {{range .Pictures}}
                     <div>
                         <a href="/galeria/{{.FileName}}">
-                            <img class="img-gallery" src="/pictures/{{.FileName}}" alt="{{.Title}}">
+                            <img class="img-gallery" src="/img/{{.FileName}}" alt="{{.Title}}">
                             <h3>{{.Title}}</h3>
                         </a>
                         <p>{{.TimeString}}</p>

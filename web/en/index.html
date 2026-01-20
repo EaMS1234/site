@@ -20,7 +20,7 @@
         <div id="nav" style="display: flex; gap: 8px;">
             <a href="/en/"><strong>Home</strong></a>
             <a href="/en/blog/"><strong>Blog</strong></a>
-            <a href="/en/pics/"><strong>Pictures</strong></a>
+            <a href="/en/pictures/"><strong>Pictures</strong></a>
             <a href="/en/about/"><strong>About</strong></a>
             <span style="flex-grow: 1;"></span>
             <a href="/"><u>pt-BR</u></a>
@@ -50,9 +50,9 @@
                 <h2 style="text-align: center;">Latest Picture</h2>
 
                 {{range .Pictures}}
-                <a href="/en/pics/{{.FileName}}">
+                <a href="/en/pictures/{{.FileName}}">
                     <div style="text-align: center;">
-                        <img src="/pictures/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+                        <img src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
                     </div>
                     <h3>{{.Title}}</h3>
                 </a>
@@ -61,7 +61,7 @@
                 {{end}}
 
                 <hr />
-                <a href="/en/pics/">View more pictures</a>
+                <a href="/en/pictures/">View more pictures</a>
             </div>
         </div>
         

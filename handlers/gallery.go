@@ -8,15 +8,15 @@ import (
 )
 
 
-func Pictures(w http.ResponseWriter, r *http.Request) {
+func Images(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "content/pictures/" + r.PathValue("file"))
 }
 
 
-func Pics(w http.ResponseWriter, r *http.Request) {
+func Pictures(w http.ResponseWriter, r *http.Request) {
 	image := r.PathValue("pic")
 
-	en := (r.URL.Path == "/en/pics/" + image)
+	en := (r.URL.Path == "/en/pictures/" + image)
 		
 	// Checks if the file exists
 	_, err := os.Stat("content/pictures/" + image)
@@ -37,7 +37,7 @@ func Pics(w http.ResponseWriter, r *http.Request) {
 
 
 func Gallery(w http.ResponseWriter, r *http.Request) {
-	en := (r.URL.Path == "/en/pics/")
+	en := (r.URL.Path == "/en/pictures/")
 
 	search := r.URL.Query().Get("q")
 
@@ -50,6 +50,8 @@ func Gallery(w http.ResponseWriter, r *http.Request) {
 		} else {
 			gallery.Title = "Resultados para \"" + search + "\""
 		}
+	} else if en {
+		gallery.Title = "Pictures"
 	}
 
 	var list []Picture
