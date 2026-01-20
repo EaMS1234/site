@@ -30,15 +30,35 @@ func main() {
 		os.Mkdir((content_dir + "/static"), 0755)
 	}
 
+	mux := http.NewServeMux()
 
-	handlers.InitAssets(content_dir)
-	handlers.InitIndex(content_dir)
-	handlers.InitAbout(content_dir)
-	handlers.InitPosts(content_dir)
-	handlers.InitGallery(content_dir)
+	// Static files
+	mux.HandleFunc("/assets/{file}", handlers.Assets)
+	mux.HandleFunc("/styles/{file}", handlers.Styles)
+	mux.HandleFunc("/static/{file}", handlers.Static)
+	mux.HandleFunc("/pictures/{file}", handlers.Pictures)
+
+	// Index
+	mux.HandleFunc("/", handlers.InitIndex)
+
+	// About
+	mux.HandleFunc("/sobre/", handlers.About)
+	mux.HandleFunc("/en/about/", handlers.About)
+
+	// Blog & gallery
+	mux.HandleFunc("/artigos/", handlers.Blog)
+	mux.HandleFunc("/en/blog/", handlers.Blog)
+	mux.HandleFunc("/galeria/", handlers.Gallery)
+	mux.HandleFunc("/en/pics/", handlers.Gallery)
+
+	// Individual posts
+	mux.HandleFunc("/artigos/{post}", handlers.Posts)
+	mux.HandleFunc("/en/blog/{post}", handlers.Posts)
+	mux.HandleFunc("/galeria/{pic}", handlers.Pics)
+	mux.HandleFunc("/en/pics/{pic}", handlers.Pics)
 
 	log.Output(1, "Serving on port 8080")
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", mux)
 }
 

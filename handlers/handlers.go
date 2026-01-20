@@ -139,14 +139,12 @@ func GetPictures(Path string, lang string) []Picture {
 
 
 // Routes the "about" page and sets it up.
-func InitAbout(content_dir string) {
-	http.HandleFunc("/sobre/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), GetHtml(content_dir + "/about.md")})
-	});
-
-	http.HandleFunc("/en/about/", func(w http.ResponseWriter, r *http.Request) {
-		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), GetHtml(content_dir + "/about.en.md")})
-	});
+func About(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/en/about/" {
+		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), GetHtml("content/about.en.md")})
+	} else {
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), GetHtml("content/about.md")})
+	}
 }
 
 
