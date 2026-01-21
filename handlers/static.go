@@ -27,7 +27,7 @@ func Styles(w http.ResponseWriter, r *http.Request) {
 }
 
 func Static(w http.ResponseWriter, r *http.Request) {
-	_, err := os.Stat("web/static/" + r.PathValue("file"))
+	_, err := os.Stat("content/static/" + r.PathValue("file"))
 	if err != nil {
 		handle404(w, r)
 		return
