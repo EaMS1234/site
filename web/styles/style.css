@@ -11,6 +11,10 @@
         --background: #111922;
         --color: white;
     }
+
+    code {
+      color: black;
+    }
 }
 
 @media (prefers-color-scheme: light) {
@@ -19,6 +23,10 @@
 
         --background: white;
         --color: black;
+    }
+
+    code {
+      color: white;
     }
 }
 
@@ -93,6 +101,12 @@ p {
 input {
     font-family: monospace;
     font-size: 15px;
+}
+
+code {
+  background-color: var(--accent-magenta);
+  border-radius: 5px;
+  font-style: italic;
 }
 
 #bar {
