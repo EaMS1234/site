@@ -11,5 +11,8 @@ RUN go mod tidy
 EXPOSE 8080
 
 RUN go build .
+
+USER 1234:1234
+
 CMD ["./site"]
 
