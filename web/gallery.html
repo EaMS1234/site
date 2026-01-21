@@ -35,7 +35,7 @@
 
         <div id="container" style="display: flex;">
             <div style="flex: 4;">
-                <form action="/galeria" method="get" style="display: flex;">
+                <form action="/galeria/" method="get" style="display: flex;">
                     <input type="text" title="Termo da pesquisa" name="q" required="true" placeholder="Pesquisar..." id="bar" style="flex: 6;" />
                     <div style="flex: 1;"></div>
                     <input type="submit" title="Buscar imagens" value="Pesquisar" id="btn" style="flex: 2;" />
@@ -50,7 +50,7 @@
                 <div class="grid-gallery" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
                     {{range .Pictures}}
                     <div>
-                        <a href="/galeria/{{.FileName}}">
+                        <a href="/galeria/{{.FileName}}/">
                             <img class="img-gallery" src="/img/{{.FileName}}" alt="{{.Title}}">
                             <h3>{{.Title}}</h3>
                         </a>
@@ -64,7 +64,7 @@
 
             <div id="years" style="flex: 1; text-align: right;">
                 {{range .Years}}
-                <a href="/galeria?q={{.Year}}">{{.Year}}</a>
+                <a href="/galeria/?q={{.Year}}">{{.Year}}</a>
                 {{end}}
             </div>
         </div>

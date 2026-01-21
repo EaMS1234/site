@@ -57,10 +57,10 @@ func main() {
 	mux.HandleFunc("/en/pictures/", handlers.Gallery)
 
 	// Individual posts
-	mux.HandleFunc("/artigos/{post}", handlers.Posts)
-	mux.HandleFunc("/en/blog/{post}", handlers.Posts)
-	mux.HandleFunc("/galeria/{pic}", handlers.Pictures)
-	mux.HandleFunc("/en/pictures/{pic}", handlers.Pictures)
+	mux.HandleFunc("/artigos/{post}/", handlers.Posts)
+	mux.HandleFunc("/en/blog/{post}/", handlers.Posts)
+	mux.HandleFunc("/galeria/{pic}/", handlers.Pictures)
+	mux.HandleFunc("/en/pictures/{pic}/", handlers.Pictures)
 
 	log.Output(1, "Serving on port 8080")
 

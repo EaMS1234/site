@@ -37,7 +37,7 @@
                 <h2 style="text-align: center;">Recent posts</h2>
 
                 {{range .Posts}}
-                <a href="/en/blog/{{.Title}}"><h3>{{.Title}}</h3></a>
+                <a href="/en/blog/{{.Title}}/"><h3>{{.Title}}</h3></a>
                 <p>{{.TimeString}}</p>
                 <p class="desc"><i>{{.Desc}}...</i><p>
                 {{end}}
@@ -50,7 +50,7 @@
                 <h2 style="text-align: center;">Latest Picture</h2>
 
                 {{range .Pictures}}
-                <a href="/en/pictures/{{.FileName}}">
+                <a href="/en/pictures/{{.FileName}}/">
                     <div style="text-align: center;">
                         <img src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
                     </div>
