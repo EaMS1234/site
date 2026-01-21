@@ -9,6 +9,12 @@ import (
 
 
 func Images(w http.ResponseWriter, r *http.Request) {
+	_, err := os.Stat("content/pictures/" + r.PathValue("file"))
+	if err != nil {
+		handle404(w, r)
+		return
+	}
+
 	http.ServeFile(w, r, "content/pictures/" + r.PathValue("file"))
 }
 
@@ -16,12 +22,12 @@ func Images(w http.ResponseWriter, r *http.Request) {
 func Pictures(w http.ResponseWriter, r *http.Request) {
 	image := r.PathValue("pic")
 
-	en := (r.URL.Path == "/en/pictures/" + image)
+	en := (r.URL.Path == "/en/pictures/" + image + "/")
 		
 	// Checks if the file exists
 	_, err := os.Stat("content/pictures/" + image)
 	if err != nil {
-		w.WriteHeader(404)
+		handle404(w, r)
 		return
 	}
 

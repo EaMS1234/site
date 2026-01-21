@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/yuin/goldmark"
@@ -155,7 +156,13 @@ func About(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func handle404(w http.ResponseWriter, r *http.Request, lang string) {
+func handle404(w http.ResponseWriter, r *http.Request) {
+	lang := ""
+
+	if strings.Contains(r.URL.Path, "/en/") || !strings.Contains(r.Header.Get("Accept-Language"), "pt") {
+		lang = "en"
+	}
+
 	w.WriteHeader(404)
 	template.Must(template.ParseFiles("web/" + lang + "/404.html")).Execute(w, r.URL.String())
 }

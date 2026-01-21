@@ -12,7 +12,7 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	target := r.PathValue("post")
 	file := "content/posts/" + target + ".md"
 
-	en := (r.URL.Path == "/en/blog/" + target)
+	en := (r.URL.Path == "/en/blog/" + target + "/")
 
 	if en {
 		file = "content/posts/en/" + target + ".md"
@@ -21,7 +21,7 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	// Checks if the file exists
 	_, err := os.Stat(file)
 	if err != nil {
-		w.WriteHeader(404)
+		handle404(w, r)
 		return
 	}
 

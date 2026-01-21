@@ -1,14 +1,19 @@
 package handlers
 
 import (
-	"net/http"
 	"html/template"
-	// "strings"
+	"net/http"
 )
-
 
 // Routes the main page and sets it up.
 func InitIndex(w http.ResponseWriter, r *http.Request) {
+	
+	// Since it is the handler for "/", it applies for the whole server.
+	if r.URL.Path != "/" && r.URL.Path != "/en/" {
+		handle404(w, r)
+		return
+	}
+
 	var index Index	
 
 	en := (r.URL.Path == "/en/")
