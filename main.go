@@ -40,8 +40,8 @@ func main() {
 	// Static files
 	mux.HandleFunc("/assets/{file}", handlers.Assets)
 	mux.HandleFunc("/styles/{file}", handlers.Styles)
-	mux.HandleFunc("/static/{file}", handlers.Static)
 	mux.HandleFunc("/img/{file}", handlers.Images)
+	mux.HandleFunc("/static/", handlers.Static)
 
 	// Index
 	mux.HandleFunc("/", handlers.InitIndex)
