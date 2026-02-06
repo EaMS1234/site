@@ -22,7 +22,7 @@ func Images(w http.ResponseWriter, r *http.Request) {
 func Pictures(w http.ResponseWriter, r *http.Request) {
 	image := r.PathValue("pic")
 
-	en := (r.URL.Path == "/en/pictures/" + image + "/")
+	en := (r.URL.Path == "/en/pictures/" + image)
 		
 	// Checks if the file exists
 	_, err := os.Stat("content/pictures/" + image)
