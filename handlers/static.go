@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"os"
+	"strings"
 )
 
 
@@ -37,12 +38,14 @@ func Scripts(w http.ResponseWriter, r *http.Request) {
 }
 
 func Static(w http.ResponseWriter, r *http.Request) {
-	_, err := os.Stat("content/static/" + r.PathValue("file"))
-	if err != nil {
+	path := strings.TrimPrefix(r.URL.Path, "/static/")
+
+	_, err := os.Stat("content/static/" + path)
+	if err != nil || path == "" {
 		handle404(w, r)
 		return
 	}
 
-	http.ServeFile(w, r, "content/static/" + r.PathValue("file"))
+	http.StripPrefix("/static/", http.FileServer(http.Dir("content/static"))).ServeHTTP(w, r)
 }
 
