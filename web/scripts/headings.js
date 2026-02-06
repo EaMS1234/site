@@ -17,8 +17,8 @@ document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((heading) => {
 
     // Remove the link once the heading is not on focus
     heading.addEventListener("mouseleave", () => {
-      heading.removeChild(heading.lastChild)
+      // Checks if the node is an anchor, and then removes it
+      heading.removeChild(heading.lastChild.nodeName === "A" ? heading.lastChild : null)
     })
   }
 })
-
