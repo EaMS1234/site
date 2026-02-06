@@ -40,6 +40,7 @@ func main() {
 	// Static files
 	mux.HandleFunc("/assets/{file}", handlers.Assets)
 	mux.HandleFunc("/styles/{file}", handlers.Styles)
+	mux.HandleFunc("/scripts/{file}", handlers.Scripts)
 	mux.HandleFunc("/static/{file}", handlers.Static)
 	mux.HandleFunc("/img/{file}", handlers.Images)
 

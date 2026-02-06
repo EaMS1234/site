@@ -26,6 +26,16 @@ func Styles(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "web/styles/" + r.PathValue("file"))
 }
 
+func Scripts(w http.ResponseWriter, r *http.Request) {
+	_, err := os.Stat("web/scripts/" + r.PathValue("file"))
+	if err != nil {
+		handle404(w, r)
+		return
+	}
+
+	http.ServeFile(w, r, "web/scripts/" + r.PathValue("file"))
+}
+
 func Static(w http.ResponseWriter, r *http.Request) {
 	_, err := os.Stat("content/static/" + r.PathValue("file"))
 	if err != nil {
