@@ -98,6 +98,11 @@ p {
     text-align: justify;
 }
 
+/* Goldmark puts MD images inside <p> tags, so this make them centered*/
+p:has(img) {
+  text-align: center;
+}
+
 input {
     font-family: monospace;
     font-size: 15px;
