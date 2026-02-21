@@ -21,7 +21,6 @@ Erick Augusto, 21-year-old brazilian, Computer Science student
 
 - 🖌️ Drawing and illustration
 - 🚲 Cycling
-- 🎲 RPG
 
 ## Contact
 
