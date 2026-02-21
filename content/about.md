@@ -21,7 +21,6 @@ Erick Augusto, brasileiro de 21 anos, estudante de Ciência da Computação
 
 - 🖌️ Desenho e ilustração
 - 🚲 Ciclismo
-- 🎲 RPG
 
 ## Contato
 
