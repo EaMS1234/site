@@ -4,7 +4,7 @@ WORKDIR /site/
 ENV TZ="America/Sao_Paulo"
 RUN date
 
-copy . .
+COPY . .
 
 RUN go mod tidy
 
