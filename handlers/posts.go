@@ -3,36 +3,28 @@ package handlers
 import (
 	"html/template"
 	"net/http"
-	"os"
 	"strings"
 )
 
 
 func Posts(w http.ResponseWriter, r *http.Request) {
 	target := r.PathValue("post")
-	file := "content/posts/" + target + ".md"
 
-	en := (r.URL.Path == "/en/blog/" + target)
+	lang := ""
 
-	if en {
-		file = "content/posts/en/" + target + ".md"
+	if r.URL.Path == "/en/blog/" + target {
+		lang = "en"
 	}
 
-	// Checks if the file exists
-	_, err := os.Stat(file)
-	if err != nil {
-		handle404(w, r)
-		return
+	// Fetches the correct post from the list
+	for _, post := range posts[lang] {
+		if post.Title == target {
+	 		template.Must(template.ParseFiles("web/" + lang + "/content.html")).Execute(w, post)
+			return
+		} 
 	}
-
-	content, data := GetHtml(file)
-	tm := GetTime(data["time"])
-
-	if en {
-	 	template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content, data["alt"]})
-	} else {
-	 	template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content, data["alt"]})
-	}
+	
+	handle404(w, r)
 }
 
 

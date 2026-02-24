@@ -128,10 +128,10 @@ func GetPosts() {
 		for _, file := range data {
 			if !file.IsDir() {
 
-				_, data := GetHtml("content/posts/" + lang + "/" + file.Name())
+				content, data := GetHtml("content/posts/" + lang + "/" + file.Name())
 				tm := GetTime(data["time"])
 
-				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], data["desc"], tm.Format("02/01/2006 - 15:04"), tm, "", ""})
+				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], data["desc"], tm.Format("02/01/2006 - 15:04"), tm, content, data["alt"]})
 			}
 		}
 
@@ -157,10 +157,20 @@ func GetPictures() {
 			if !file.IsDir() && re.MatchString(file.Name()) {
 
 				// Gets the timestamp for the file
-				_, data := GetHtml("content/pictures/" + lang + "/" + file.Name() + ".md")
+				content, data := GetHtml("content/pictures/" + lang + "/" + file.Name() + ".md")
+				
+				// Fixes the empty string in case there's no markdown for the image
+				if data == nil {
+					data = make(map[string]string)
+
+					file, err := os.Stat("content/pictures/" + file.Name())
+					if err != nil {panic(err)}
+					data["time"] = file.ModTime().Format("02/01/2006 - 15:04")
+				}
+
 				tm := GetTime(data["time"])
 
-				pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], data["desc"], tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
+				pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], data["desc"], tm.Format("02/01/2006 - 15:04"), file.Name(), tm, content})
 			}
 		}
 

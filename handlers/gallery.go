@@ -22,28 +22,22 @@ func Images(w http.ResponseWriter, r *http.Request) {
 func Pictures(w http.ResponseWriter, r *http.Request) {
 	image := r.PathValue("pic")
 
-	en := (r.URL.Path == "/en/pictures/" + image)
-		
-	// Checks if the file exists
-	_, err := os.Stat("content/pictures/" + image)
-	if err != nil {
-		handle404(w, r)
-		return
-	}
+	lang := ""
 
+	if r.URL.Path == "/en/pictures/" + image {
+		lang = "en"
+	}
+		
 	title := image[:len(image)-4]
 
-	if en {
-		txt, data := GetHtml(("content/pictures/en/" + image + ".md"))
-		tm := GetTime(data["time"])
-
-		template.Must(template.ParseFiles("web/en/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, txt})
-	} else {
-		txt, data := GetHtml(("content/pictures/" + image + ".md"))
-		tm := GetTime(data["time"])
-
-		template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, txt})
+	for _, pic := range(pictures[lang]) {
+		if pic.Title == title {
+			template.Must(template.ParseFiles("web/" + lang + "/picture.html")).Execute(w, pic)
+			return
+		}
 	}
+
+	handle404(w, r)
 }
 
 
