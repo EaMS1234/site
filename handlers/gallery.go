@@ -31,15 +31,16 @@ func Pictures(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tm := GetTime(("content/pictures/" + image))
 	title := image[:len(image)-4]
 
 	if en {
-		txt, _ := GetHtml(("content/pictures/en/" + image + ".md"))
+		txt, data := GetHtml(("content/pictures/en/" + image + ".md"))
+		tm := GetTime(data["time"])
 
 		template.Must(template.ParseFiles("web/en/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, txt})
 	} else {
-		txt, _ := GetHtml(("content/pictures/" + image + ".md"))
+		txt, data := GetHtml(("content/pictures/" + image + ".md"))
+		tm := GetTime(data["time"])
 
 		template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, txt})
 	}

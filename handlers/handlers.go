@@ -54,20 +54,27 @@ var pictures = make(map[string][]Picture)
 
 
 // Simple function for getting the timestamp of a file
-func GetTime(File string) time.Time {
-	file, err := os.Stat(File)
-	if err != nil {panic(err)}
+func GetTime(timestamp string) time.Time {
+	if timestamp == "<nil>" {
+		timestamp = "01/01/1979 - 00:00"
+	}
 
-	return file.ModTime()
+	t, err := time.Parse("02/01/2006 - 15:04", timestamp)
+	if err != nil {
+		panic(err)
+	}
+
+	return t
 }
 
 
 // Converts a markdown located at "Path" to valid html
-func GetHtml(Path string) (template.HTML, string) {
+func GetHtml(Path string) (template.HTML, map[string]string) {
 	file, err := os.ReadFile(Path)
-	if err != nil {return template.HTML(""), "/"}
+	if err != nil {return template.HTML(""), nil}
 
 	var buf bytes.Buffer
+	var data = make(map[string]string)
 
 	markdown := goldmark.New(
 		goldmark.WithExtensions(meta.New(meta.WithStoresInDocument(),),),
@@ -77,13 +84,25 @@ func GetHtml(Path string) (template.HTML, string) {
 
 	markdown.Convert(file, &buf)
 
-	html := template.HTML(buf.String())
-	alt := fmt.Sprint(markdown.Parser().Parse(text.NewReader([]byte(file))).OwnerDocument().Meta()["alt"])
-	if alt == "<nil>" {
-		alt = "/"
+	// Parsed Markdown into HTML code
+	html := template.HTML(buf.String())  
+	
+	// Parsed metadata
+	md := markdown.Parser().Parse(text.NewReader([]byte(file))).OwnerDocument().Meta()
+
+	data["alt"] = fmt.Sprint(md["alt"])
+	data["desc"] = fmt.Sprint(md["desc"])
+	data["time"] = fmt.Sprint(md["time"])
+
+	if len(data["desc"]) >= 128 {
+		data["desc"] = data["desc"][:128]
 	}
 
-	return html, alt
+	if data["alt"] == "<nil>" {
+		data["alt"] = "/"
+	}
+
+	return html, data
 }
 
 
@@ -98,20 +117,10 @@ func GetPosts() {
 		for _, file := range data {
 			if !file.IsDir() {
 
-				// Gets the timestamp for the file
-				tm := GetTime("content/posts/" + lang + "/" + file.Name())
+				_, data := GetHtml("content/posts/" + lang + "/" + file.Name())
+				tm := GetTime(data["time"])
 
-				// Gets the first 128 characters as a description
-				f, err := os.Open(("content/posts/" + lang + "/" + file.Name()))
-				if err != nil {panic(err)}
-
-				buf := make([]byte, 128)
-
-				head, err := f.Read(buf)
-				if err != nil {panic(err)}
-
-
-				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), tm, "", ""})
+				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], data["desc"], tm.Format("02/01/2006 - 15:04"), tm, "", ""})
 			}
 		}
 
@@ -137,20 +146,10 @@ func GetPictures() {
 			if !file.IsDir() && re.MatchString(file.Name()) {
 
 				// Gets the timestamp for the file
-				tm := GetTime("content/pictures/" + file.Name())
+				_, data := GetHtml("content/pictures/" + lang + "/" + file.Name() + ".md")
+				tm := GetTime(data["time"])
 
-				// Gets the first 128 characters as a description
-				f, err := os.Open(("content/pictures/" + lang + "/" + file.Name() + ".md"))
-				if err != nil {
-					pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], "", tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
-				} else {
-					buf := make([]byte, 128)
-
-					head, err := f.Read(buf)
-					if err != nil {panic(err)}
-
-					pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
-				}
+				pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], data["desc"], tm.Format("02/01/2006 - 15:04"), file.Name(), tm, ""})
 			}
 		}
 
@@ -165,13 +164,13 @@ func GetPictures() {
 // Routes the "about" page and sets it up.
 func About(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/en/about/" {
-		txt, alt := GetHtml("content/about.en.md")
+		txt, data := GetHtml("content/about.en.md")
 
-		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), txt, alt})
+		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), txt, data["alt"]})
 	} else {
-		txt, alt := GetHtml("content/about.md")
+		txt, data := GetHtml("content/about.md")
 
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), txt, alt})
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), txt, data["alt"]})
 	}
 }
 
