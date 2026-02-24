@@ -55,10 +55,6 @@ var pictures = make(map[string][]Picture)
 
 // Simple function for getting the timestamp of a file
 func GetTime(timestamp string) time.Time {
-	if timestamp == "<nil>" {
-		timestamp = "01/01/1979 - 00:00"
-	}
-
 	t, err := time.Parse("02/01/2006 - 15:04", timestamp)
 	if err != nil {
 		panic(err)
@@ -94,12 +90,27 @@ func GetHtml(Path string) (template.HTML, map[string]string) {
 	data["desc"] = fmt.Sprint(md["desc"])
 	data["time"] = fmt.Sprint(md["time"])
 
+	// Empty string if no description
+	if data["desc"] == "<nil>" {
+		data["desc"] = ""
+	}
+
+	// Limits the description to 128 characters
 	if len(data["desc"]) >= 128 {
 		data["desc"] = data["desc"][:128]
 	}
 
+	// If no alt, then root
 	if data["alt"] == "<nil>" {
 		data["alt"] = "/"
+	}
+
+	// If no time, then get the file timestamp
+	if data["time"] == "<nil>" {
+		file, err := os.Stat(Path)
+		if err != nil {panic(err)}
+
+		data["time"] = file.ModTime().Format("02/01/2006 - 15:04")
 	}
 
 	return html, data
