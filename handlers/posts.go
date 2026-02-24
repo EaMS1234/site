@@ -25,13 +25,15 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	content := GetHtml(file)
+	content, alt := GetHtml(file)
 	tm := GetTime(file)
 
+	println(alt)
+
 	if en {
-	 	template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content})
+	 	template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content, alt})
 	} else {
-	 	template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content})
+	 	template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{target, "", tm.Format("02/01/2006 - 15:04"), tm, content, alt})
 	}
 }
 

@@ -1,3 +1,7 @@
+---
+alt: ../sobre/
+---
+
 The purpose of this website is to have my own little corner on the internet, where I can post about my projects, thoughts, stories and whatever comes to mind!
 
 ## About the author

@@ -35,9 +35,13 @@ func Pictures(w http.ResponseWriter, r *http.Request) {
 	title := image[:len(image)-4]
 
 	if en {
-		template.Must(template.ParseFiles("web/en/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, GetHtml(("content/pictures/en/" + image + ".md"))})
+		txt, _ := GetHtml(("content/pictures/en/" + image + ".md"))
+
+		template.Must(template.ParseFiles("web/en/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, txt})
 	} else {
-		template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, GetHtml(("content/pictures/" + image + ".md"))})
+		txt, _ := GetHtml(("content/pictures/" + image + ".md"))
+
+		template.Must(template.ParseFiles("web/picture.html")).Execute(w, Picture{title,"", tm.Format("2/1/2006 - 15:04"), image, tm, txt})
 	}
 }
 

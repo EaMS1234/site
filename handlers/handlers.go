@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -11,8 +12,10 @@ import (
 	"time"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
+	"github.com/yuin/goldmark/text"
 )
 
 
@@ -22,6 +25,7 @@ type Page struct {
 	TimeString string
 	Time time.Time
 	Content template.HTML
+	Alt string
 }
 
 
@@ -59,13 +63,14 @@ func GetTime(File string) time.Time {
 
 
 // Converts a markdown located at "Path" to valid html
-func GetHtml(Path string) template.HTML {
+func GetHtml(Path string) (template.HTML, string) {
 	file, err := os.ReadFile(Path)
-	if err != nil {return template.HTML("")}
+	if err != nil {return template.HTML(""), "/"}
 
 	var buf bytes.Buffer
 
 	markdown := goldmark.New(
+		goldmark.WithExtensions(meta.New(meta.WithStoresInDocument(),),),
 		goldmark.WithRendererOptions(html.WithUnsafe()),
 		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
 	)
@@ -73,8 +78,12 @@ func GetHtml(Path string) template.HTML {
 	markdown.Convert(file, &buf)
 
 	html := template.HTML(buf.String())
+	alt := fmt.Sprint(markdown.Parser().Parse(text.NewReader([]byte(file))).OwnerDocument().Meta()["alt"])
+	if alt == "<nil>" {
+		alt = "/"
+	}
 
-	return html
+	return html, alt
 }
 
 
@@ -102,7 +111,7 @@ func GetPosts() {
 				if err != nil {panic(err)}
 
 
-				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), tm, ""})
+				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], string(buf[:head]), tm.Format("02/01/2006 - 15:04"), tm, "", ""})
 			}
 		}
 
@@ -156,9 +165,13 @@ func GetPictures() {
 // Routes the "about" page and sets it up.
 func About(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/en/about/" {
-		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), GetHtml("content/about.en.md")})
+		txt, alt := GetHtml("content/about.en.md")
+
+		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), txt, alt})
 	} else {
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), GetHtml("content/about.md")})
+		txt, alt := GetHtml("content/about.md")
+
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), txt, alt})
 	}
 }
 
