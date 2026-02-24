@@ -8,30 +8,25 @@
     <link rel="icon" href="/assets/favicon.ico">
 </head>
 <body>
-
     <header>
-        <!-- <h1><strong>ЭaMS</strong></h1> -->
-
         <picture>
             <source srcset="/assets/logo_dark.png" media="(prefers-color-scheme: dark)">
             <source srcset="/assets/logo_light.png" media="(prefers-color-scheme: light)">
             <img src="/assets/logo_light.png" alt="ЭaMS" style="height: 42px; margin-bottom: 16px;">
         </picture>
-
-        <div id="nav" style="display: flex; gap: 8px;">
+        
+        <div id="nav">
             <a href="/"><strong>Início</strong></a>
             <a href="/artigos/"><strong>Artigos</strong></a>
             <a href="/galeria/"><strong>Galeria</strong></a>
             <a href="/sobre/"><strong>Sobre</strong></a>
-            <span style="flex-grow: 1;"></span>
-            <a href="/en/pictures/"><strong>en</strong></a>
         </div>
+        <hr />
+        <a style="float: right;" href="/en/pictures/"><strong>[en]</strong></a>
     </header>
 
     <main>
-        <hr />
-
-        <h2 id="content-title">{{.Title}}</h2>
+        <h1 id="content-title">{{.Title}}</h1>
         <p><i>{{.TimeString}}</i></p>
 
         <br />
@@ -49,10 +44,13 @@
         <hr />
     </main>
 
-    <footer>
-        © Erick Augusto
-        <br/>
-        <a href="https://github.com/eams1234/site">GitHUB</a>
+   <footer>
+        2025-2026 © Erick Augusto
+        <br /><br />
+        <a href="https://github.com/eams1234/site">GitHUB</a> |
+        <a href="mailto:contato@eams.dev.br">E-Mail</a> |
+        <a href="https://www.linkedin.com/in/eams1234/">LinkedIn</a> |
+        <a href="https://instagram.com/eams1234">Instagram</a>
     </footer>
 
     <script src="/scripts/headings.js"></script>
