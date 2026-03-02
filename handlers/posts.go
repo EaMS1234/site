@@ -49,7 +49,7 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	var list []Page;
+	var list []Post;
 
 	// Updates the list of posts asynchronously
 	go GetPosts()

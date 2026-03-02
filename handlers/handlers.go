@@ -19,14 +19,14 @@ import (
 )
 
 
-type Page struct {
+type Post struct {
 	Name string
 	Title string
 	Desc string
+	Alt string
 	TimeString string
 	Time time.Time
 	Content template.HTML
-	Alt string
 }
 
 
@@ -41,14 +41,14 @@ type Picture struct {
 
 
 type Index struct {
-	Posts []Page
+	Posts []Post
 	Pictures []Picture
 	Year string
 }
 
 
 // Persistent list of posts. Is dynamically updated during runtime.
-var posts = make(map[string][]Page)
+var posts = make(map[string][]Post)
 
 // Persistent list of pictures. Also updated.
 var pictures = make(map[string][]Picture)
@@ -97,10 +97,6 @@ func GetHtml(Path string) (template.HTML, map[string]string) {
 		data["desc"] = ""
 	}
 
-	if data["title"] == "<nil>" {
-		data["title"] = Path
-	}
-
 	// Limits the description to 128 characters
 	if len(data["desc"]) >= 128 {
 		data["desc"] = data["desc"][:128]
@@ -137,7 +133,11 @@ func GetPosts() {
 				content, data := GetHtml("content/posts/" + lang + "/" + file.Name())
 				tm := GetTime(data["time"])
 
-				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], data["title"], data["desc"], tm.Format("02/01/2006 - 15:04"), tm, content, data["alt"]})
+				if data["title"] == "<nil>" {
+					data["title"] = file.Name()[:len(file.Name())-3]
+				}
+
+				posts[lang] = append(posts[lang], Post{file.Name()[:len(file.Name())-3], data["title"], data["desc"], data["alt"], tm.Format("02/01/2006 - 15:04"), tm, content})
 			}
 		}
 
@@ -193,11 +193,11 @@ func About(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/en/about/" {
 		txt, data := GetHtml("content/about.en.md")
 
-		template.Must(template.ParseFiles("web/en/post.html")).Execute(w, Page{"", "About", "", "", time.Now(), txt, data["alt"]})
+		template.Must(template.ParseFiles("web/en/post.html")).Execute(w, Post{"", "About", "", "", data["alt"], time.Now(), txt})
 	} else {
 		txt, data := GetHtml("content/about.md")
 
-		template.Must(template.ParseFiles("web/post.html")).Execute(w, Page{"", "Sobre", "", "", time.Now(), txt, data["alt"]})
+		template.Must(template.ParseFiles("web/post.html")).Execute(w, Post{"", "Sobre", "", "", data["alt"], time.Now(), txt})
 	}
 }
 

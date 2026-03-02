@@ -77,11 +77,11 @@ func Gallery(w http.ResponseWriter, r *http.Request) {
 
 			// If search is not empty, append only the matching content
 			if strings.Contains(strings.ToLower(pic.Title), search) || strings.Contains(strings.ToLower(pic.Summary), search) || strings.Contains(pic.Time.Format("2006"), search) {
-				gallery.Years[year] = Index{[]Page{}, append(gallery.Years[year].Pictures, pic), year}
+				gallery.Years[year] = Index{[]Post{}, append(gallery.Years[year].Pictures, pic), year}
 			}
 		} else {
 			// If search is empty, append everything
-			gallery.Years[year] = Index{[]Page{}, append(gallery.Years[year].Pictures, pic), year}
+			gallery.Years[year] = Index{[]Post{}, append(gallery.Years[year].Pictures, pic), year}
 		}
 	}
 
