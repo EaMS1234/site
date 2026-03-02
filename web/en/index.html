@@ -41,7 +41,7 @@
                 <h2 style="text-align: center;">Recent posts</h2>
 
                 {{range .Posts}}
-                <a href="/en/blog/{{.Title}}"><h3>{{.Title}}</h3></a>
+                <a href="/en/blog/{{.Name}}"><h3>{{.Title}}</h3></a>
                 <p>{{.TimeString}}</p>
                 <p class="desc"><i>{{.Desc}}...</i><p>
                 {{end}}

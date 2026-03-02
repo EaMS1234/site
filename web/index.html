@@ -41,7 +41,7 @@
                 <h2 style="text-align: center;">Publicações recentes</h2>
 
                 {{range .Posts}}
-                <a href="/artigos/{{.Title}}"><h3>{{.Title}}</h3></a>
+                <a href="/artigos/{{.Name}}"><h3>{{.Title}}</h3></a>
                 <p>{{.TimeString}}</p>
                 <p class="desc"><i>{{.Desc}}...</i><p>
                 {{end}}

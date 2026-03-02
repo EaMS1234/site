@@ -18,7 +18,7 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 
 	// Fetches the correct post from the list
 	for _, post := range posts[lang] {
-		if post.Title == target {
+		if post.Name == target {
 	 		template.Must(template.ParseFiles("web/" + lang + "/content.html")).Execute(w, post)
 			return
 		} 

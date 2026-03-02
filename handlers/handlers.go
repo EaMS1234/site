@@ -20,6 +20,7 @@ import (
 
 
 type Page struct {
+	Name string
 	Title string
 	Desc string
 	TimeString string
@@ -89,10 +90,15 @@ func GetHtml(Path string) (template.HTML, map[string]string) {
 	data["alt"] = fmt.Sprint(md["alt"])
 	data["desc"] = fmt.Sprint(md["desc"])
 	data["time"] = fmt.Sprint(md["time"])
+	data["title"] = fmt.Sprint(md["title"])
 
 	// Empty string if no description
 	if data["desc"] == "<nil>" {
 		data["desc"] = ""
+	}
+
+	if data["title"] == "<nil>" {
+		data["title"] = Path
 	}
 
 	// Limits the description to 128 characters
@@ -131,7 +137,7 @@ func GetPosts() {
 				content, data := GetHtml("content/posts/" + lang + "/" + file.Name())
 				tm := GetTime(data["time"])
 
-				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], data["desc"], tm.Format("02/01/2006 - 15:04"), tm, content, data["alt"]})
+				posts[lang] = append(posts[lang], Page{file.Name()[:len(file.Name())-3], data["title"], data["desc"], tm.Format("02/01/2006 - 15:04"), tm, content, data["alt"]})
 			}
 		}
 
@@ -187,11 +193,11 @@ func About(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/en/about/" {
 		txt, data := GetHtml("content/about.en.md")
 
-		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"About", "", "", time.Now(), txt, data["alt"]})
+		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"", "About", "", "", time.Now(), txt, data["alt"]})
 	} else {
 		txt, data := GetHtml("content/about.md")
 
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"Sobre", "", "", time.Now(), txt, data["alt"]})
+		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"", "Sobre", "", "", time.Now(), txt, data["alt"]})
 	}
 }
 
