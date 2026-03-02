@@ -19,7 +19,7 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 	// Fetches the correct post from the list
 	for _, post := range posts[lang] {
 		if post.Name == target {
-	 		template.Must(template.ParseFiles("web/" + lang + "/content.html")).Execute(w, post)
+	 		template.Must(template.ParseFiles("web/" + lang + "/post.html")).Execute(w, post)
 			return
 		} 
 	}
@@ -78,9 +78,9 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if en {
-		template.Must(template.ParseFiles("web/en/posts.html")).Execute(w, blog_page)
+		template.Must(template.ParseFiles("web/en/blog.html")).Execute(w, blog_page)
 	} else {
-		template.Must(template.ParseFiles("web/posts.html")).Execute(w, blog_page)
+		template.Must(template.ParseFiles("web/blog.html")).Execute(w, blog_page)
 	}
 }
 

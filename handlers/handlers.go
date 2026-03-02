@@ -193,11 +193,11 @@ func About(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/en/about/" {
 		txt, data := GetHtml("content/about.en.md")
 
-		template.Must(template.ParseFiles("web/en/content.html")).Execute(w, Page{"", "About", "", "", time.Now(), txt, data["alt"]})
+		template.Must(template.ParseFiles("web/en/post.html")).Execute(w, Page{"", "About", "", "", time.Now(), txt, data["alt"]})
 	} else {
 		txt, data := GetHtml("content/about.md")
 
-		template.Must(template.ParseFiles("web/content.html")).Execute(w, Page{"", "Sobre", "", "", time.Now(), txt, data["alt"]})
+		template.Must(template.ParseFiles("web/post.html")).Execute(w, Page{"", "Sobre", "", "", time.Now(), txt, data["alt"]})
 	}
 }
 
