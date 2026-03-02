@@ -22,7 +22,7 @@
             <a href="/en/about/"><strong>About</strong></a>
         </div>
         <hr />
-        <a style="float: right;" href="/galeria/{{.FileName}}"><strong>[pt-br]</strong></a>
+        <a style="float: right;" href="/galeria/{{.Name}}"><strong>[pt-br]</strong></a>
     </header>
 
     <main>
@@ -32,10 +32,10 @@
         <br />
 
         <div style="text-align: center;">
-        <img src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+        <img src="/img/{{.Name}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
         </div>
 
-        {{.Description}}
+        {{.Content}}
 
         <br />
 

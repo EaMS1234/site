@@ -49,12 +49,12 @@
                         <div class="grid-gallery" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
                         {{range .Pictures}}
                             <div>
-                                <a href="/galeria/{{.FileName}}">
-                                    <img class="img-gallery" src="/img/{{.FileName}}" alt="{{.Title}}">
+                                <a href="/galeria/{{.Name}}">
+                                    <img class="img-gallery" src="/img/{{.Name}}" alt="{{.Title}}">
                                     <h3 id="content-title">{{.Title}}</h3>
                                 </a>
                                 <p>{{.TimeString}}</p>
-                                <p class="desc"><i>{{.Summary}}...</i><p>
+                                <p class="desc"><i>{{.Desc}}...</i><p>
                             </div>
                         {{end}}
                         </div>

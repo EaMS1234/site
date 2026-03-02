@@ -30,19 +30,9 @@ type Post struct {
 }
 
 
-type Picture struct {
-	Title string
-	Summary string
-	TimeString string
-	FileName string
-	Time time.Time
-	Description template.HTML
-}
-
-
 type Index struct {
 	Posts []Post
-	Pictures []Picture
+	Pictures []Post
 	Year string
 }
 
@@ -51,7 +41,7 @@ type Index struct {
 var posts = make(map[string][]Post)
 
 // Persistent list of pictures. Also updated.
-var pictures = make(map[string][]Picture)
+var pictures = make(map[string][]Post)
 
 
 // Simple function for getting the timestamp of a file
@@ -172,11 +162,17 @@ func GetPictures() {
 					file, err := os.Stat("content/pictures/" + file.Name())
 					if err != nil {panic(err)}
 					data["time"] = file.ModTime().Format("02/01/2006 - 15:04")
+
+					data["title"] = file.Name()[:len(file.Name())-4]
+				}
+
+				if data["title"] == "<nil>" {
+					data["title"] = file.Name()[:len(file.Name())-4]
 				}
 
 				tm := GetTime(data["time"])
 
-				pictures[lang] = append(pictures[lang], Picture{file.Name()[:len(file.Name())-4], data["desc"], tm.Format("02/01/2006 - 15:04"), file.Name(), tm, content})
+				pictures[lang] = append(pictures[lang], Post{file.Name(), data["title"], data["desc"], data["alt"], tm.Format("02/01/2006 - 15:04"), tm, content})
 			}
 		}
 

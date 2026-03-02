@@ -69,11 +69,11 @@ func Blog(w http.ResponseWriter, r *http.Request) {
 
 			// If search is not empty, append only the matching content
 			if strings.Contains(strings.ToLower(post.Title), search) || strings.Contains(strings.ToLower(post.Desc), search) || strings.Contains(post.Time.Format("2006"), search) {
-				blog_page.Years[year] = Index{append(blog_page.Years[year].Posts, post), []Picture{}, year}
+				blog_page.Years[year] = Index{append(blog_page.Years[year].Posts, post), []Post{}, year}
 			}
 		} else {
 			// If search is empty, append everything
-			blog_page.Years[year] = Index{append(blog_page.Years[year].Posts, post), []Picture{}, year}
+			blog_page.Years[year] = Index{append(blog_page.Years[year].Posts, post), []Post{}, year}
 		}
 	}
 

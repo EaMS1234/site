@@ -28,10 +28,8 @@ func Pictures(w http.ResponseWriter, r *http.Request) {
 		lang = "en"
 	}
 		
-	title := image[:len(image)-4]
-
 	for _, pic := range(pictures[lang]) {
-		if pic.Title == title {
+		if pic.Name == image {
 			template.Must(template.ParseFiles("web/" + lang + "/picture.html")).Execute(w, pic)
 			return
 		}
@@ -61,7 +59,7 @@ func Gallery(w http.ResponseWriter, r *http.Request) {
 
 	go GetPictures()
 
-	var list []Picture
+	var list []Post
 
 	if en {
 		list = pictures["en"]
@@ -76,7 +74,7 @@ func Gallery(w http.ResponseWriter, r *http.Request) {
 			search := strings.ToLower(search)
 
 			// If search is not empty, append only the matching content
-			if strings.Contains(strings.ToLower(pic.Title), search) || strings.Contains(strings.ToLower(pic.Summary), search) || strings.Contains(pic.Time.Format("2006"), search) {
+			if strings.Contains(strings.ToLower(pic.Title), search) || strings.Contains(strings.ToLower(pic.Desc), search) || strings.Contains(pic.Time.Format("2006"), search) {
 				gallery.Years[year] = Index{[]Post{}, append(gallery.Years[year].Pictures, pic), year}
 			}
 		} else {
