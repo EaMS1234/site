@@ -31,6 +31,8 @@
     <main>
         <h1 id="content-title">{{.Title}}</h1>
 
+        <p style="text-align: right;"><a href="./feed.xml">⚛️ Feed</a></p>
+
         <div id="container" style="display: flex;">
             <div id="list" style="flex: 4;">
                 <form action="/en/blog" method="get" style="display: flex;">
@@ -41,8 +43,6 @@
 
                 <br />
 
-                <a href="./feed.xml">Add the Feed</a>
-
                 {{range .Years}}
                     <div id="year-{{.Year}}">
                         <h2 id="{{.Year}}">{{.Year}}</h2>
@@ -50,7 +50,7 @@
                         {{range .Posts}}
                             <a href="/en/blog/{{.Name}}"><h3 id="content-title">{{.Title}}</h3></a>
                             <p>{{.TimeString}}</p>
-                            <p class="desc"><i>{{.Desc}}...</i><p>
+                            <p class="desc"><i>{{.Desc}}</i><p>
                         {{end}}
                     </div>
                 {{end}}

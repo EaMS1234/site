@@ -93,9 +93,9 @@ func GetHtml(Path string) (template.HTML, map[string]string) {
 		data["desc"] = ""
 	}
 
-	// Limits the description to 128 characters
+	// Limits the description to 128 characters and add three dots
 	if len(data["desc"]) >= 128 {
-		data["desc"] = data["desc"][:128]
+		data["desc"] = data["desc"][:128] + "..."
 	}
 
 	// If no alt, then root

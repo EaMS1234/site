@@ -43,7 +43,7 @@
                 {{range .Posts}}
                 <a href="/en/blog/{{.Name}}"><h3>{{.Title}}</h3></a>
                 <p>{{.TimeString}}</p>
-                <p class="desc"><i>{{.Desc}}...</i><p>
+                <p class="desc"><i>{{.Desc}}</i><p>
                 {{end}}
 
                 <hr />
@@ -56,12 +56,12 @@
                 {{range .Pictures}}
                 <a href="/en/pictures/{{.Name}}">
                     <div style="text-align: center;">
-                        <img src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+                        <img class="img-gallery" src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
                     </div>
                     <h3>{{.Title}}</h3>
                 </a>
                 <p>{{.TimeString}}</p>
-                <p><i>{{.Desc}}...</i></p>
+                <p><i>{{.Desc}}</i></p>
                 {{end}}
 
                 <hr />
