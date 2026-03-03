@@ -20,13 +20,14 @@ import (
 
 
 type Post struct {
-	Name string
-	Title string
-	Desc string
-	Alt string
-	TimeString string
-	Time time.Time
-	Content template.HTML
+	FileName string        // The full name of an image file for pictures
+	Name string            // The name of the .md file (post) or the image file (pictures) without the extension
+	Title string           // The title that is shown to the user
+	Desc string            // The description/summary of the content
+	Alt string             // The alternative name/URL of the content in another language
+	TimeString string      // Actual timestamp that is shown to the user
+	Time time.Time         // Timestamp of the content (used only for comparing and sorting)
+	Content template.HTML  // Parsed contents of an .md file. Empty if no .md file (in the case of a picture)
 }
 
 
@@ -77,10 +78,15 @@ func GetHtml(Path string) (template.HTML, map[string]string) {
 	// Parsed metadata
 	md := markdown.Parser().Parse(text.NewReader([]byte(file))).OwnerDocument().Meta()
 
-	data["alt"] = fmt.Sprint(md["alt"])
-	data["desc"] = fmt.Sprint(md["desc"])
-	data["time"] = fmt.Sprint(md["time"])
-	data["title"] = fmt.Sprint(md["title"])
+
+	// The metadata allow you to customize the description, url, timestamp or title of a content.
+	// It also allows you to link to the same content in another language
+
+	data["alt"] = fmt.Sprint(md["alt"])      // URL in the alternative language
+	data["desc"] = fmt.Sprint(md["desc"])    // custom summary/description
+	data["time"] = fmt.Sprint(md["time"])    // custom timestamp
+	data["title"] = fmt.Sprint(md["title"])  // title of the post or picture
+	data["url"] = fmt.Sprint(md["url"])      // custom URL
 
 	// Empty string if no description
 	if data["desc"] == "<nil>" {
@@ -119,15 +125,21 @@ func GetPosts() {
 
 		for _, file := range data {
 			if !file.IsDir() {
+				file_name := file.Name()
+				canonical_name := file_name[:len(file_name)-3]
 
-				content, data := GetHtml("content/posts/" + lang + "/" + file.Name())
+				content, data := GetHtml("content/posts/" + lang + "/" + file_name)
 				tm := GetTime(data["time"])
 
 				if data["title"] == "<nil>" {
-					data["title"] = file.Name()[:len(file.Name())-3]
+					data["title"] = canonical_name
 				}
 
-				posts[lang] = append(posts[lang], Post{file.Name()[:len(file.Name())-3], data["title"], data["desc"], data["alt"], tm.Format("02/01/2006 - 15:04"), tm, content})
+				if data["url"] == "<nil>" {
+					data["url"] = canonical_name
+				}
+
+				posts[lang] = append(posts[lang], Post{"", data["url"], data["title"], data["desc"], data["alt"], tm.Format("02/01/2006 - 15:04"), tm, content})
 			}
 		}
 
@@ -152,27 +164,34 @@ func GetPictures() {
 		for _, file := range data {
 			if !file.IsDir() && re.MatchString(file.Name()) {
 
-				// Gets the timestamp for the file
-				content, data := GetHtml("content/pictures/" + lang + "/" + file.Name() + ".md")
-				
-				// Fixes the empty string in case there's no markdown for the image
+				file_name := file.Name()
+				canonical_name := file_name[:len(file_name)-4]  // get rid of the .jpg or .png
+
+				// Gets the data from the file
+				content, data := GetHtml("content/pictures/" + lang + "/" + file_name + ".md")
+
+				// Fixes the empty strings in case there's no markdown for the image
 				if data == nil {
 					data = make(map[string]string)
 
-					file, err := os.Stat("content/pictures/" + file.Name())
+					file, err := os.Stat("content/pictures/" + file_name)
 					if err != nil {panic(err)}
 					data["time"] = file.ModTime().Format("02/01/2006 - 15:04")
-
-					data["title"] = file.Name()[:len(file.Name())-4]
+					data["title"] = canonical_name
+					data["url"] = canonical_name
 				}
 
 				if data["title"] == "<nil>" {
-					data["title"] = file.Name()[:len(file.Name())-4]
+					data["title"] = canonical_name
+				}
+
+				if data["url"] == "<nil>" {
+					data["url"] = canonical_name
 				}
 
 				tm := GetTime(data["time"])
 
-				pictures[lang] = append(pictures[lang], Post{file.Name(), data["title"], data["desc"], data["alt"], tm.Format("02/01/2006 - 15:04"), tm, content})
+				pictures[lang] = append(pictures[lang], Post{file_name, data["url"], data["title"], data["desc"], data["alt"], tm.Format("02/01/2006 - 15:04"), tm, content})
 			}
 		}
 
@@ -189,11 +208,11 @@ func About(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/en/about/" {
 		txt, data := GetHtml("content/about.en.md")
 
-		template.Must(template.ParseFiles("web/en/post.html")).Execute(w, Post{"", "About", "", "", data["alt"], time.Now(), txt})
+		template.Must(template.ParseFiles("web/en/post.html")).Execute(w, Post{"", "", "About", "", data["alt"], "", time.Now(), txt})
 	} else {
 		txt, data := GetHtml("content/about.md")
 
-		template.Must(template.ParseFiles("web/post.html")).Execute(w, Post{"", "Sobre", "", "", data["alt"], time.Now(), txt})
+		template.Must(template.ParseFiles("web/post.html")).Execute(w, Post{"", "", "Sobre", "", data["alt"], "", time.Now(), txt})
 	}
 }
 

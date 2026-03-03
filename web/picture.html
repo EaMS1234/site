@@ -22,7 +22,7 @@
             <a href="/sobre/"><strong>Sobre</strong></a>
         </div>
         <hr />
-        <a style="float: right;" href="/en/pictures/{{.Name}}"><strong>[en]</strong></a>
+        <a style="float: right;" href="/en/pictures/{{.Alt}}"><strong>[en]</strong></a>
     </header>
 
     <main>
@@ -32,7 +32,7 @@
         <br />
 
         <div style="text-align: center;">
-        <img src="/img/{{.Name}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+        <img src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
         </div>
 
         {{.Content}}
