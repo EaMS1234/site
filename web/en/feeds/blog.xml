@@ -18,7 +18,7 @@
         <id>https://www.eams.dev.br/en/blog/{{.Name}}</id>
         <title>{{.Title}}</title>
         <updated>{{.TimeString}}</updated>
-        <link rel="alternate" href="https://www.eams.dev.br/en/blog/{{.Name}}" />
+        <link href="https://www.eams.dev.br/en/blog/{{.Name}}" />
         <summary>{{.Desc}}</summary>
         <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">{{.Content}}</div></content>
     </entry>

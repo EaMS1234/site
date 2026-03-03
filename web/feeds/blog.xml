@@ -3,7 +3,7 @@
     <id>https://www.eams.dev.br/artigos/</id>
     <title>ЭaMS | Artigos</title>
     <updated>{{.Update}}</updated>
-    <link rel="alternate" href="https://www.eams.dev.br/artigos/" />
+    <link rel= href="https://www.eams.dev.br/artigos/" />
     <link rel="self" href="https://www.eams.dev.br/artigos/feed" />
     <subtitle>Publicações recentes sobre os meus projetos, ideias, histórias e tudo o que der na telha!</subtitle>
     <author>
@@ -18,7 +18,7 @@
         <id>https://www.eams.dev.br/artigos/{{.Name}}</id>
         <title>{{.Title}}</title>
         <updated>{{.TimeString}}</updated>
-        <link rel="alternate" href="https://www.eams.dev.br/artigos/{{.Name}}" />
+        <link href="https://www.eams.dev.br/artigos/{{.Name}}" />
         <summary>{{.Desc}}</summary>
         <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">{{.Content}}</div></content>
     </entry>

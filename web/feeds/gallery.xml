@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="pt-BR">
+    <id>https://www.eams.dev.br/galeria/</id>
+    <title>ЭaMS | Galeria</title>
+    <updated>{{.Update}}</updated>
+    <link href="https://www.eams.dev.br/galeria/" />
+    <link rel="self" href="https://www.eams.dev.br/galeria/feed" />
+    <subtitle>As imagens publicadas mais recentemente</subtitle>
+    <author>
+        <name>Erick Augusto</name>
+        <email>contato@eams.dev.br</email>
+    </author>
+    <rights>2025-2026 © Erick Augusto </rights>
+
+
+    {{range .List}}
+    <entry>
+        <id>https://www.eams.dev.br/galeria/{{.Name}}</id>
+        <title>{{.Title}}</title>
+        <updated>{{.TimeString}}</updated>
+        <link href="https://www.eams.dev.br/galeria/{{.Name}}" />
+        <summary>{{.Desc}}</summary>
+        <content type="xhtml">
+          <div xmlns="http://www.w3.org/1999/xhtml">
+              <img src="https://www.eams.dev.br/img/{{.FileName}}" />
+
+              {{.Content}}
+          </div>
+        </content>
+    </entry>
+    {{end}}
+</feed>
