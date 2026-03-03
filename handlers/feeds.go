@@ -9,7 +9,9 @@ import (
 func PostsFeeds(w http.ResponseWriter, r *http.Request) {
 	GetPosts()
 
-	if r.URL.Path == "/artigos/feed" {
+	w.Header().Set("Content-Type", "application/xml")
+
+	if r.URL.Path == "/artigos/feed.xml" {
 		list := posts[""]
 
 		for i := range list {
@@ -20,7 +22,7 @@ func PostsFeeds(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Path == "/en/blog/feed" {
+	if r.URL.Path == "/en/blog/feed.xml" {
 		list := posts["en"]
 
 		for i := range list {
@@ -30,13 +32,17 @@ func PostsFeeds(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles("web/en/feeds/blog.xml")).Execute(w, struct{Update string; List []Post}{list[0].TimeString, list})
 		return
 	}
+
+	handle404(w, r)
 }
 
 
 func GalleryFeeds(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/galeria/feed" {
-		GetPictures()
+	GetPictures()
 
+	w.Header().Set("Content-Type", "application/xml")
+
+	if r.URL.Path == "/galeria/feed.xml" {
 		list := pictures[""]
 
 		for i := range list {
@@ -47,9 +53,7 @@ func GalleryFeeds(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.URL.Path == "/en/pictures/feed" {
-		GetPictures()
-
+	if r.URL.Path == "/en/pictures/feed.xml" {
 		list := pictures["en"]
 
 		for i := range list {
@@ -59,5 +63,7 @@ func GalleryFeeds(w http.ResponseWriter, r *http.Request) {
 		template.Must(template.ParseFiles("web/en/feeds/gallery.xml")).Execute(w, struct{Update string; List[]Post}{list[0].TimeString, list})
 		return
 	}
+
+	handle404(w, r)
 }
 

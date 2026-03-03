@@ -3,7 +3,7 @@
     <id>https://www.eams.dev.br/artigos/</id>
     <title>ЭaMS | Artigos</title>
     <updated>{{.Update}}</updated>
-    <link rel= href="https://www.eams.dev.br/artigos/" />
+    <link href="https://www.eams.dev.br/artigos/" />
     <link rel="self" href="https://www.eams.dev.br/artigos/feed" />
     <subtitle>Publicações recentes sobre os meus projetos, ideias, histórias e tudo o que der na telha!</subtitle>
     <author>

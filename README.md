@@ -49,8 +49,8 @@ Note: These tags are totally optional! You are fine without them, as long as you
 - [x] Blog
 - [x] Gallery
 - [x] Multilingual support (portuguese & english)
+- [x] RSS/Atom feed
 - [ ] Accessibility features
 - [ ] Portfolio page for projects
 - [ ] Support for the russian language
 - [ ] Support for tags, categories and picture folders
-- [ ] RSS feed
