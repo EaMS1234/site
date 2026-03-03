@@ -63,6 +63,10 @@ func main() {
 	mux.HandleFunc("/galeria/{pic}", handlers.Pictures)
 	mux.HandleFunc("/en/pictures/{pic}", handlers.Pictures)
 
+	// Feeds
+	mux.HandleFunc("/artigos/feed", handlers.Feeds)
+	mux.HandleFunc("/en/blog/feed", handlers.Feeds)
+
 	log.Output(1, "Serving on port 8080")
 
 	http.ListenAndServe(":8080", mux)

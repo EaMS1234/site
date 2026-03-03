@@ -66,7 +66,7 @@ func GetHtml(Path string) (template.HTML, map[string]string) {
 
 	markdown := goldmark.New(
 		goldmark.WithExtensions(meta.New(meta.WithStoresInDocument(),),),
-		goldmark.WithRendererOptions(html.WithUnsafe()),
+		goldmark.WithRendererOptions(html.WithUnsafe(), html.WithXHTML()),
 		goldmark.WithParserOptions(parser.WithAutoHeadingID()),
 	)
 

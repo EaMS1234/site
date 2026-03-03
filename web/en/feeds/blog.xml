@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <id>https://www.eams.dev.br/en/blog/</id>
+    <title>ЭaMS | Blog</title>
+    <updated>{{.Update}}</updated>
+    <link rel="alternate" href="https://www.eams.dev.br/en/blog/" />
+    <link rel="self" href="https://www.eams.dev.br/en/blog/feed" />
+    <subtitle>Recent posts about my projects, thoughts, stories and whatever comes to mind!</subtitle>
+    <author>
+        <name>Erick Augusto</name>
+        <email>contato@eams.dev.br</email>
+    </author>
+    <rights>2025-2026 © Erick Augusto </rights>
+
+
+    {{range .List}}
+    <entry>
+        <id>https://www.eams.dev.br/en/blog/{{.Name}}</id>
+        <title>{{.Title}}</title>
+        <updated>{{.TimeString}}</updated>
+        <link rel="alternate" href="https://www.eams.dev.br/en/blog/{{.Name}}" />
+        <summary>{{.Desc}}</summary>
+        <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">{{.Content}}</div></content>
+    </entry>
+    {{end}}
+</feed>
