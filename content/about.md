@@ -1,5 +1,5 @@
 ---
-alt: ../about/
+alt: ../about
 ---
 
 Esse site foi feito com o propósito de ser o meu cantinho na internet, onde eu posso postar sobre os meus projetos, ideias, histórias e tudo o que der na telha!

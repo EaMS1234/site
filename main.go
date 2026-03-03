@@ -48,8 +48,8 @@ func main() {
 	mux.HandleFunc("/", handlers.InitIndex)
 
 	// About
-	mux.HandleFunc("/sobre/", handlers.About)
-	mux.HandleFunc("/en/about/", handlers.About)
+	mux.HandleFunc("/sobre", handlers.About)
+	mux.HandleFunc("/en/about", handlers.About)
 
 	// Blog & gallery
 	mux.HandleFunc("/artigos/", handlers.Blog)
