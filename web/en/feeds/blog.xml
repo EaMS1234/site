@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
     <id>https://www.eams.dev.br/en/blog/</id>
-    <title>ЭaMS | Blog</title>
+    <title>EaMS | Blog</title>
     <updated>{{.Update}}</updated>
     <link rel="alternate" href="https://www.eams.dev.br/en/blog/" />
     <link rel="self" href="https://www.eams.dev.br/en/blog/feed" />

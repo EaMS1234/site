@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="pt-BR">
     <id>https://www.eams.dev.br/artigos/</id>
-    <title>ЭaMS | Artigos</title>
+    <title>EaMS | Artigos</title>
     <updated>{{.Update}}</updated>
     <link href="https://www.eams.dev.br/artigos/" />
     <link rel="self" href="https://www.eams.dev.br/artigos/feed" />
