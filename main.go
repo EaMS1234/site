@@ -41,13 +41,13 @@ func main() {
 	mux.HandleFunc("/assets/{file}", handlers.Assets)
 	mux.HandleFunc("/styles/{file}", handlers.Styles)
 	mux.HandleFunc("/scripts/{file}", handlers.Scripts)
-	mux.HandleFunc("/img/{file}", handlers.Images)
 	mux.HandleFunc("/static/", handlers.Static)
 
 	// Index
 	mux.HandleFunc("/", handlers.InitIndex)
 
 	// Blog & gallery
+	mux.HandleFunc("/assets/images/{file}", handlers.Images)
 	mux.HandleFunc("/artigos/", handlers.Blog)
 	mux.HandleFunc("/en/blog/", handlers.Blog)
 	mux.HandleFunc("/galeria/", handlers.Gallery)

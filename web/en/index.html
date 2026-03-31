@@ -48,12 +48,12 @@
             </div>
 
             <div style="flex: 5;">
-                <h2 style="text-align: center;">Latest Picture</h2>
+                <h2 style="text-align: center;">Latest picture</h2>
 
                 {{range .Pictures}}
                 <a href="/en/pictures/{{.Name}}">
                     <div style="text-align: center;">
-                        <img class="img-gallery" src="/img/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
+                        <img class="img-gallery" src="/assets/images/{{.FileName}}" alt="{{.Title}}" style="max-width: 100%; height: auto;">
                     </div>
                     <h3>{{.Title}}</h3>
                 </a>
