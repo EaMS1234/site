@@ -10,7 +10,7 @@
         <name>Erick Augusto</name>
         <email>contato@eams.dev.br</email>
     </author>
-    <rights>2025-2026 © Erick Augusto </rights>
+    <rights>© 2025-2026 Erick Augusto</rights>
 
 
     {{range .List}}

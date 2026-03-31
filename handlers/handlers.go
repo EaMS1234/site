@@ -203,20 +203,7 @@ func GetPictures() {
 }
 
 
-// Routes the "about" page and sets it up.
-func About(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/en/about" {
-		txt, data := GetHtml("content/about.en.md")
-
-		template.Must(template.ParseFiles("web/en/post.html")).Execute(w, Post{"", "", "About", "", data["alt"], "", time.Now(), txt})
-	} else {
-		txt, data := GetHtml("content/about.md")
-
-		template.Must(template.ParseFiles("web/post.html")).Execute(w, Post{"", "", "Sobre", "", data["alt"], "", time.Now(), txt})
-	}
-}
-
-
+// Custom 404 page
 func handle404(w http.ResponseWriter, r *http.Request) {
 	lang := ""
 
