@@ -22,10 +22,8 @@ The server reads the `content` folder looking for `.md`, `.png` and `.jpg` files
 It can also serve static assets and whole files contained inside the `static` folder.
 
 The basic structure of the `content` directory is:
-- `content/about.md`: The "about" page for the main language (portuguese).
-- `content/about.en.md`: The "about" page for the english language.
-- `content/posts/`: Location of posts, as `.md` files, for the main language.
-- `content/posts/en/`: Location of posts for the english language.
+- `content/posts/`: Location of posts, as `.md` files, exclusive for the main language.
+- `content/posts/en/`: Location of posts exclusive for the english language.
 - `content/pictures/`: Location of pictures, as `.png` and `.jpg` files. Custom descriptions can be providade in a markdown file that shares its name with the picture: `example.png.md`.
 - `content/pictures/en/`: Location of pictures' captions as `.md` files for the english language.
 - `content/static/`: Serves all files within it as-is directly trough HTTP.
@@ -37,20 +35,16 @@ By default, the title and the URL of a post or picture will be its filename, and
 title: Custom Title
 url: Custom URL
 alt: URL of the Translated Version
-desc: Description or Summary that appears below the title
+desc: Summary that appears below the title
 time: day/month/year - hours:minutes (follow the format: "02/01/2006 - 15:04")
 ---
 ```
 
 Note: These tags are totally optional! You are fine without them, as long as you follow the correct structure of the "content" directory
 
-## Roadmap
+## Features
 - [x] Read and parse content from disk
 - [x] Blog
 - [x] Gallery
 - [x] Multilingual support (portuguese & english)
 - [x] RSS/Atom feed
-- [ ] Accessibility features
-- [ ] Portfolio page for projects
-- [ ] Support for the russian language
-- [ ] Support for tags, categories and picture folders
