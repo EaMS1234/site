@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"html/template"
 	"net/http"
 	"os"
-	"html/template"
+	"regexp"
 	"strings"
 )
 
@@ -41,7 +42,8 @@ func Pictures(w http.ResponseWriter, r *http.Request) {
 
 func Gallery(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/galeria/" && r.URL.Path != "/en/pictures/" {
-		http.Redirect(w, r, r.URL.Path[:len(r.URL.Path)-1], http.StatusFound)
+		reg := regexp.MustCompile("^/galeria/([^/]+)|^/en/pictures/([^/]+)")
+		http.Redirect(w, r, reg.FindString(r.URL.Path), http.StatusMovedPermanently)
 		return
 	}
 

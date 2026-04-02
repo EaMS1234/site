@@ -3,6 +3,7 @@ package handlers
 import (
 	"html/template"
 	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -31,7 +32,8 @@ func Posts(w http.ResponseWriter, r *http.Request) {
 // Handles posts
 func Blog(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/artigos/" && r.URL.Path != "/en/blog/" {
-		http.Redirect(w, r, r.URL.Path[:len(r.URL.Path)-1], http.StatusFound)
+		reg := regexp.MustCompile("^/artigos/([^/]+)|^/en/blog/([^/]+)")
+		http.Redirect(w, r, reg.FindString(r.URL.Path), http.StatusMovedPermanently)
 		return
 	}
 	
